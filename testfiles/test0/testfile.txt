@@ -1,0 +1,200 @@
+const int global_const_val0 = 0;
+const int global_const_val1 = 1;
+const int global_const_val2 = 2;
+const int global_const_val3 = 3;
+
+const int global_const_array0[2][2] = {{1, 2}, {3, 4}};
+
+int global_val0;
+int global_val1 = 1;
+int global_val2 = 2;
+
+int add(int a, int b) {
+    int c = a + b;
+    return c;
+}
+
+int sub(int a, int b) {
+    int c = a - b;
+    return c;
+}
+
+int sum(int a[], int n) {
+    int b = 0;
+    int i = 0;
+    while (i < n) {
+        b = b + a[i];
+        i = i + 1;
+    }
+    return b;
+}
+
+int matrixsum(int a[][5], int n) {
+    int res = 0;
+    int i = 0, j = 0;
+    while (i < n) {
+        j = 0;
+        while (j < 5) {
+            res = res + a[i][j];
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    return res;
+}
+
+int func1() {
+    global_val0 = global_val0 + 1;
+    return 1;
+}
+
+int func2(int n) {
+    if (n == 99) {
+        return 1;
+    }
+    return 0;
+}
+
+void dfs1(int n) {
+    if (n > global_const_val0) {
+        dfs1(n - 1);
+    } else {
+        global_val0 = 0;
+    }
+}
+
+void dfs2() {
+    if (global_val1 == 0) {
+        return;
+    } else {
+        global_val1 = global_val1 - 1;
+        dfs2();
+    }
+}
+
+int add3(int a, int b, int c) {
+    return a + b + c;
+}
+
+int main() {
+    printf("21371248\n");
+
+    // 1
+    int i1 = 0, i2 = 0, i3 = 0, i4 = 0;
+    if (0 && func1()) {
+        i1 = 1;
+    }
+    if (1 || func1()) {
+        i2 = 1;
+    }
+    printf("%d %d %d %d\n", i1, i2, i3, i4);
+
+    // 2
+    int val0;
+    const int val1 = 123456;
+    int array0[4] = {i1, i2, i3, i4};
+    int array1[19191 / 6397] = {123, 456, 789}; 
+    const int array2[2] = {1919, 1920};
+    int array3[2][3] = {{array1[2], array1[1], array1[0]}, {987, 654, 321}};
+    val0 = getint();
+    printf("%d %d %d %d %d\n", val0, val1, array0[2], array2[0], array3[1][1]);
+
+    // 3
+    if (global_val1) {
+        //int global_val0 = 2;
+    }
+    global_val0 = 1;
+    while (global_val0 != 0) {
+        dfs1(5);
+    } 
+    printf("%d\n", global_val0);
+
+    // 4
+    int sumres = sum(array3[0], 3);
+    int addres = add(array1[2], 768767);
+    int subres;
+    subres = sub(global_const_val1, array2[1]);
+    printf("%d %d %d\n", sumres, addres, subres);
+
+    // 5
+    int i5 = 0;
+    int n;
+    n = getint();
+    int res1 = 0;
+    n = n % 105;
+    while (i5 < n) {
+        if (i5 % 2) {
+            if (i5 % 4) {
+                i5 = i5 * global_val2;
+            } else {
+                i5 = i5 + global_const_val1;
+                continue;
+            }
+        } else if (i5 > 100) {
+            break;
+        }
+        i5 = i5 + global_const_val1;
+    }
+    n = getint();
+    int i6 = 0;
+    while (i6 < n && !func2(i6)) {
+       global_val0 = global_val0 + i6;
+       i6 = i6 + 1;
+    }
+    printf("%d %d %d\n", i5, i6, global_val0);
+
+    // 6
+    i1 = 0;
+    i2 = 0;
+    i3 = 0;
+    i4 = 0;
+    if (global_val2 > 1) {
+        i1 = 1;
+    }
+    if (3 < global_val2) {
+        i2 = 1;
+    }
+    if (2 <= global_val2) {
+        i3 = 1;
+    }
+    if (1 >= global_const_val1) {
+        i4 = 1;
+    }
+    printf("%d %d %d %d\n", i1, i2, i3, i4);
+
+    // 7
+    global_val1 = 10;
+    dfs2();
+    printf("%d\n", global_val1);
+
+    // 8
+    const int abc = 1, cab = 1;
+    const int cba = 1, bca = 1, acb = 1;
+    const int bac = 1;
+    int a1 = 1;/*texttexttexttexttexttexttexttext
+    texttexttexttexttexttext*/int a2 = 1;
+    if (1) {
+        int a2 = 2;
+    }
+    int a3 = -1;
+    a3 = (a3 - 1);
+    a3 = +1;
+    printf("%d %d %d\n", add(a1, a2), a3, add3(a3, a3, a3));
+
+    // 9
+    int array4[6][5];
+
+    int i = 0, j = 0;
+    while (i < 6) {
+        j = 0;
+        while (j < 5) {
+            array4[i][j] = i * j / 2;
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    ;
+    printf("%d\n", matrixsum(array4, 6));
+
+    return 0;
+}
