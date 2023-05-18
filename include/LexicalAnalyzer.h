@@ -41,7 +41,7 @@ enum LexemeSymbol {
     LSS,        // <
     LEQ,        // <=
     GRE,        // >
-    GRQ,        // >=
+    GEQ,        // >=
     EQL,        // ==
     NEQ,        // !=
     ASSIGN,     // =
@@ -54,6 +54,9 @@ enum LexemeSymbol {
     LBRACE,     // {
     RBRACE,     // }
 
+    SLC,        // //
+    LMLC,       // /*
+    RMLC,       // */
     FINISH
 };
 
@@ -65,6 +68,8 @@ private:
     std::ifstream sourceFile;
 
     static std::map<std::string, LexemeSymbol> reservedWords;
+    static std::map<std::string, LexemeSymbol> reservedSingle;
+    static std::map<std::string, LexemeSymbol> reservedSpecial;
 
     std::string presentString;
 

@@ -18,6 +18,35 @@ LexicalAnalyzer::LexicalAnalyzer(const std::string& fileName) {
     reservedWords["return"] = RETURNTK;
     reservedWords["void"] = VOIDTK;
 
+    reservedSingle["+"] = PLUS;
+    reservedSingle["-"] = MINU;
+    reservedSingle["*"] = MULT;
+    reservedSingle["/"] = DIV;
+    reservedSingle["%"] = MOD;
+    reservedSingle[";"] = SEMICN;
+    reservedSingle[","] = COMMA;
+    reservedSingle["("] = LPARENT;
+    reservedSingle[")"] = RPARENT;
+    reservedSingle["["] = LBRACK;
+    reservedSingle["]"] = RBRACK;
+    reservedSingle["{"] = LBRACE;
+    reservedSingle["}"] = RBRACE;
+
+    reservedSpecial["&&"] = AND;
+    reservedSpecial["||"] = OR;
+    reservedSpecial["<"] = LSS;
+    reservedSpecial["<="] = LEQ;
+    reservedSpecial[">"] = GRE;
+    reservedSpecial[">="] = GEQ;
+    reservedSpecial["="] = ASSIGN;
+    reservedSpecial["=="] = EQL;
+    reservedSpecial["!"] = NOT;
+    reservedSpecial["!="] = NEQ;
+    reservedSpecial["\""] = STRCON;
+    reservedSpecial["//"] = SLC;
+    reservedSpecial["/*"] = LMLC;
+    reservedSpecial["*/"] = RMLC;
+
     sourceFile.open(fileName);
 
     bufCh = (char)sourceFile.get();
@@ -29,41 +58,81 @@ LexicalAnalyzer::~LexicalAnalyzer() {
 void LexicalAnalyzer::nextLexeme() {
     presentString.clear();
 
+    if (sourceFile.eof()) {
+        presentLexeme = FINISH;
+    }
+
     while (std::isspace(bufCh)) {
         bufCh = (char)sourceFile.get();
     }
 
     if (std::isdigit(bufCh)) {
         presentLexeme = INTCON;
-        presentString += bufCh;
-        for (bufCh = (char)sourceFile.get(); std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
+        for (; std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
     } else if (std::isalpha(bufCh)) {
-        presentString += bufCh;
-        for (bufCh = (char)sourceFile.get(); std::isalpha(bufCh); bufCh = (char)sourceFile.get()) {
+        for (; std::isalpha(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
 
-        auto it = reservedWords.find(presentString);
-        if (it != reservedWords.end()) {
-            presentLexeme = it->second;
+        auto iter = reservedWords.find(presentString);
+        if (iter != reservedWords.end()) {
+            presentLexeme = iter->second;
         } else {
             presentLexeme = IDENFR;
         }
     } else {
         presentString += bufCh;
-        switch (bufCh) {
-            case '!':
-                presentLexeme = NOT;
-                break;
-            case '&':
-                bufCh = (char)sourceFile.get();
+        auto iterSingle = reservedSingle.find(presentString);
+        if (iterSingle != reservedSingle.end()) {
+            presentLexeme = iterSingle->second;
+            bufCh = (char)sourceFile.get();
+        } else {
+            bufCh = (char)sourceFile.get();
+            std::string tempString = presentString + bufCh;
+            auto iterSpecial = reservedSpecial.find(tempString);
+            if (iterSpecial != reservedSpecial.end()) {
+                if (iterSpecial->second == SLC) {
+                    while (bufCh != '\n') {
+                        bufCh = (char)sourceFile.get();
+                    }
+                    bufCh = (char)sourceFile.get();
+                    nextLexeme();
+                } else if (iterSpecial->second == LMLC) {
+                    bufCh = (char)sourceFile.get();
+                    char tempCh = bufCh;
+                    while (!(tempCh == '*' && bufCh == '/')) {
+                        bufCh = (char)sourceFile.get();
+                        tempCh = bufCh;
+                    }
+                    bufCh = (char)sourceFile.get();
+                    nextLexeme();
+                } else {
+                    presentString += bufCh;
+                    presentLexeme = iterSpecial->second;
+                    bufCh = (char)sourceFile.get();
+                }
+            } else {
+                iterSpecial = reservedSpecial.find(presentString);
+                if (iterSpecial != reservedSpecial.end()) {
+                    presentLexeme = iterSpecial->second;
+                    if (presentLexeme == STRCON) {
+                        while (bufCh != '\"') {
+                            presentString += bufCh;
+                            bufCh = (char)sourceFile.get();
+                        }
+                        presentString += bufCh;
+                        bufCh = (char)sourceFile.get();
+                    }
+                    // next bufCh already exist
+                } else {
+                    std::cerr << "ERROR" << std::endl;
+                }
+            }
 
         }
-
     }
-
 }
 
 std::string LexicalAnalyzer::getPresentString() {
