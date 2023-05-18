@@ -50,7 +50,11 @@ LexicalAnalyzer::LexicalAnalyzer(const std::string& fileName) {
     sourceFile.open(fileName);
 
     bufCh = (char)sourceFile.get();
+
+    presentString = "";
+    presentLexeme = BEGIN;
 }
+
 LexicalAnalyzer::~LexicalAnalyzer() {
     sourceFile.close();
 }
@@ -59,7 +63,8 @@ void LexicalAnalyzer::nextLexeme() {
     presentString.clear();
 
     if (sourceFile.eof()) {
-        presentLexeme = FINISH;
+        presentLexeme = END;
+        return;
     }
 
     while (std::isspace(bufCh)) {
