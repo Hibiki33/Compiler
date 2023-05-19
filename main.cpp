@@ -10,8 +10,10 @@ int main() {
 
     while (lexicalAnalyzer.getPresentLexeme() != END) {
         lexicalAnalyzer.nextLexeme();
-        outFile << LexemeSymbolNames[lexicalAnalyzer.getPresentLexeme()];
-        outFile << " " << lexicalAnalyzer.getPresentString() << std::endl;
+        if (lexicalAnalyzer.getPresentLexeme() != END) {
+            outFile << LexemeSymbolNames[lexicalAnalyzer.getPresentLexeme()];
+            outFile << " " << lexicalAnalyzer.getPresentString() << std::endl;
+        }
     }
 
 

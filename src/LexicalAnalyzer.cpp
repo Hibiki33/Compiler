@@ -20,8 +20,6 @@ LexicalAnalyzer::LexicalAnalyzer(const std::string& fileName) {
 
     reservedSingle["+"] = PLUS;
     reservedSingle["-"] = MINU;
-    reservedSingle["*"] = MULT;
-    reservedSingle["/"] = DIV;
     reservedSingle["%"] = MOD;
     reservedSingle[";"] = SEMICN;
     reservedSingle[","] = COMMA;
@@ -43,6 +41,8 @@ LexicalAnalyzer::LexicalAnalyzer(const std::string& fileName) {
     reservedSpecial["!"] = NOT;
     reservedSpecial["!="] = NEQ;
     reservedSpecial["\""] = STRCON;
+    reservedSpecial["*"] = MULT;
+    reservedSpecial["/"] = DIV;
     reservedSpecial["//"] = SLC;
     reservedSpecial["/*"] = LMLC;
     reservedSpecial["*/"] = RMLC;
@@ -62,13 +62,13 @@ LexicalAnalyzer::~LexicalAnalyzer() {
 void LexicalAnalyzer::nextLexeme() {
     presentString.clear();
 
+    while (std::isspace(bufCh) || bufCh == '\n') {
+        bufCh = (char)sourceFile.get();
+    }
+
     if (sourceFile.eof()) {
         presentLexeme = END;
         return;
-    }
-
-    while (std::isspace(bufCh)) {
-        bufCh = (char)sourceFile.get();
     }
 
     if (std::isdigit(bufCh)) {
@@ -76,8 +76,8 @@ void LexicalAnalyzer::nextLexeme() {
         for (; std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
-    } else if (std::isalpha(bufCh)) {
-        for (; std::isalpha(bufCh); bufCh = (char)sourceFile.get()) {
+    } else if (std::isalpha(bufCh) || bufCh == '_') {
+        for (; std::isalpha(bufCh) || bufCh == '_' || std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
 
@@ -99,7 +99,7 @@ void LexicalAnalyzer::nextLexeme() {
             auto iterSpecial = reservedSpecial.find(tempString);
             if (iterSpecial != reservedSpecial.end()) {
                 if (iterSpecial->second == SLC) {
-                    while (bufCh != '\n') {
+                    while (!sourceFile.eof() && bufCh != '\n') {
                         bufCh = (char)sourceFile.get();
                     }
                     bufCh = (char)sourceFile.get();
@@ -107,9 +107,10 @@ void LexicalAnalyzer::nextLexeme() {
                 } else if (iterSpecial->second == LMLC) {
                     bufCh = (char)sourceFile.get();
                     char tempCh = bufCh;
+                    bufCh = (char)sourceFile.get();
                     while (!(tempCh == '*' && bufCh == '/')) {
-                        bufCh = (char)sourceFile.get();
                         tempCh = bufCh;
+                        bufCh = (char)sourceFile.get();
                     }
                     bufCh = (char)sourceFile.get();
                     nextLexeme();
@@ -135,7 +136,6 @@ void LexicalAnalyzer::nextLexeme() {
                     std::cerr << "ERROR" << std::endl;
                 }
             }
-
         }
     }
 }
