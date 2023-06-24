@@ -52,7 +52,6 @@ Lexer::Lexer(const std::string& fileName) {
     bufCh = (char)sourceFile.get();
 
     presentLineNumber = 1;
-
     presentString = "";
     presentToken = BEGIN;
 }
