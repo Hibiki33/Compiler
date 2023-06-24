@@ -13,5 +13,5 @@ include_directories(
 add_executable(
         Compiler
         main.cpp
-        src/LexicalAnalyzer.cpp
-)
+        src/Lexer.cpp
+        src/Parser.cpp)

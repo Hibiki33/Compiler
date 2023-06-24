@@ -2,8 +2,8 @@
 // Created by Hibiki33 on 2023/5/17.
 //
 
-#ifndef COMPILER_LEXICALANALYZER_H
-#define COMPILER_LEXICALANALYZER_H
+#ifndef COMPILER_LEXER_H
+#define COMPILER_LEXER_H
 
 #pragma once
 #include <iostream>
@@ -64,7 +64,7 @@ enum LexemeSymbol {
     END
 };
 
-const std::string LexemeSymbolNames[] {
+const std::string lexemeSymbolNames[] {
         "",             // BEGIN
 
         "IDENFR",       // Ident
@@ -113,13 +113,13 @@ const std::string LexemeSymbolNames[] {
         ""              // END
 };
 
-class LexicalAnalyzer {
+class Lexer {
 public:
     void nextLexeme();
 
-    explicit LexicalAnalyzer(const std::string& fileName);
+    explicit Lexer(const std::string& fileName);
 
-    ~LexicalAnalyzer();
+    ~Lexer();
 
     std::string getPresentString();
 
@@ -140,4 +140,4 @@ private:
 };
 
 
-#endif //COMPILER_LEXICALANALYZER_H
+#endif //COMPILER_LEXER_H

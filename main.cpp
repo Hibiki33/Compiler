@@ -1,17 +1,17 @@
 #include <iostream>
-#include "LexicalAnalyzer.h"
+#include "Lexer.h"
 
 int main() {
     std::string testFileName = "./testfiles/LexicalAnalyze/testfile.txt";
     std::string outFileName = "./testfiles/LexicalAnalyze/output.txt";
 
-    LexicalAnalyzer lexicalAnalyzer(testFileName);
+    Lexer lexicalAnalyzer(testFileName);
     std::ofstream outFile(outFileName);
 
     while (lexicalAnalyzer.getPresentLexeme() != END) {
         lexicalAnalyzer.nextLexeme();
         if (lexicalAnalyzer.getPresentLexeme() != END) {
-            outFile << LexemeSymbolNames[lexicalAnalyzer.getPresentLexeme()];
+            outFile << lexemeSymbolNames[lexicalAnalyzer.getPresentLexeme()];
             outFile << " " << lexicalAnalyzer.getPresentString() << std::endl;
         }
     }
