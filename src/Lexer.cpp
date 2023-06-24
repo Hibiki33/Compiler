@@ -51,6 +51,8 @@ Lexer::Lexer(const std::string& fileName) {
 
     bufCh = (char)sourceFile.get();
 
+    presentLineNumber = 1;
+
     presentString = "";
     presentToken = BEGIN;
 }
@@ -69,6 +71,10 @@ void Lexer::nextToken() {
 
     // ignore invalid characters
     while (std::isspace(bufCh) || bufCh == '\n' || bufCh == '\r') {
+        // record line number
+        if (bufCh == '\n') {
+            presentLineNumber++;
+        }
         bufCh = (char)sourceFile.get();
     }
 
@@ -115,6 +121,7 @@ void Lexer::nextToken() {
                     while (!sourceFile.eof() && bufCh != '\n' && bufCh != '\r') {
                         bufCh = (char)sourceFile.get();
                     }
+                    presentLineNumber++;
                     bufCh = (char)sourceFile.get();
                     nextToken();
                 } else if (iterSpecial->second == LMLC) {
@@ -124,6 +131,10 @@ void Lexer::nextToken() {
                     char tempCh = bufCh;
                     bufCh = (char)sourceFile.get();
                     while (!(tempCh == '*' && bufCh == '/')) {
+                        // record line number
+                        if (bufCh == '\n') {
+                            presentLineNumber++;
+                        }
                         tempCh = bufCh;
                         bufCh = (char)sourceFile.get();
                     }
@@ -165,8 +176,15 @@ std::string Lexer::getPresentString() {
 }
 
 /*
- * Overview: Get present Token's symbol.
+ * Overview: Get present token's symbol.
  */
 TokenSymbol Lexer::getPresentToken() {
     return presentToken;
+}
+
+/*
+ * Overview: Get token's line number.
+ */
+int Lexer::getPresentLineNumber() {
+    return presentLineNumber;
 }

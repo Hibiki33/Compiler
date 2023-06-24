@@ -125,6 +125,8 @@ public:
 
     TokenSymbol getPresentToken();
 
+    int getPresentLineNumber();
+
 private:
     std::ifstream sourceFile;
 
@@ -135,6 +137,8 @@ private:
     std::string presentString;
 
     TokenSymbol presentToken;
+
+    int presentLineNumber;
 
     char bufCh;
 };

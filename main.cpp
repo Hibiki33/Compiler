@@ -11,6 +11,7 @@ int main() {
     while (lexicalAnalyzer.getPresentToken() != END) {
         lexicalAnalyzer.nextToken();
         if (lexicalAnalyzer.getPresentToken() != END) {
+            // outFile << lexicalAnalyzer.getPresentLineNumber() << " ";
             outFile << tokenSymbolNames[lexicalAnalyzer.getPresentToken()];
             outFile << " " << lexicalAnalyzer.getPresentString() << std::endl;
         }
