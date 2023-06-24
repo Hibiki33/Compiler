@@ -52,7 +52,7 @@ Lexer::Lexer(const std::string& fileName) {
     bufCh = (char)sourceFile.get();
 
     presentString = "";
-    presentLexeme = BEGIN;
+    presentToken = BEGIN;
 }
 
 Lexer::~Lexer() {
@@ -60,11 +60,11 @@ Lexer::~Lexer() {
 }
 
 /*
- * Overview: Get next valid lexeme.
- *  Set next lexeme's symbol to 'presentLexeme'.
- *  Set next lexeme itself to 'presentString'.
+ * Overview: Get next valid token.
+ *  Set next token's symbol to 'presentToken'.
+ *  Set next token itself to 'presentString'.
  */
-void Lexer::nextLexeme() {
+void Lexer::nextToken() {
     presentString.clear();
 
     // ignore invalid characters
@@ -73,13 +73,13 @@ void Lexer::nextLexeme() {
     }
 
     if (sourceFile.eof()) {
-        presentLexeme = END;
+        presentToken = END;
         return;
     }
 
     if (std::isdigit(bufCh)) {
         // parse numeric constants
-        presentLexeme = INTCON;
+        presentToken = INTCON;
         for (; std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
@@ -90,9 +90,9 @@ void Lexer::nextLexeme() {
         }
         auto iter = reservedWords.find(presentString);
         if (iter != reservedWords.end()) {
-            presentLexeme = iter->second;
+            presentToken = iter->second;
         } else {
-            presentLexeme = IDENFR;
+            presentToken = IDENFR;
         }
     } else {
         // parse reserved symbols
@@ -100,7 +100,7 @@ void Lexer::nextLexeme() {
         auto iterSingle = reservedSingle.find(presentString);
         if (iterSingle != reservedSingle.end()) {
             // definitely single symbols
-            presentLexeme = iterSingle->second;
+            presentToken = iterSingle->second;
             bufCh = (char)sourceFile.get();
         } else {
             // possibly single symbols or double symbols
@@ -111,15 +111,15 @@ void Lexer::nextLexeme() {
                 // double symbols or comments
                 if (iterSpecial->second == SLC) {
                     // specially handle comments
-                    // recursively invoke 'nextLexeme' to get the next valid lexeme
+                    // recursively invoke 'nextToken' to get the next valid token
                     while (!sourceFile.eof() && bufCh != '\n' && bufCh != '\r') {
                         bufCh = (char)sourceFile.get();
                     }
                     bufCh = (char)sourceFile.get();
-                    nextLexeme();
+                    nextToken();
                 } else if (iterSpecial->second == LMLC) {
                     // specially handle comments
-                    // recursively invoke 'nextLexeme' to get the next valid lexeme
+                    // recursively invoke 'nextToken' to get the next valid token
                     bufCh = (char)sourceFile.get();
                     char tempCh = bufCh;
                     bufCh = (char)sourceFile.get();
@@ -128,18 +128,18 @@ void Lexer::nextLexeme() {
                         bufCh = (char)sourceFile.get();
                     }
                     bufCh = (char)sourceFile.get();
-                    nextLexeme();
+                    nextToken();
                 } else {
                     // double symbols
                     presentString += bufCh;
-                    presentLexeme = iterSpecial->second;
+                    presentToken = iterSpecial->second;
                     bufCh = (char)sourceFile.get();
                 }
             } else {
                 iterSpecial = reservedSpecial.find(presentString);
                 if (iterSpecial != reservedSpecial.end()) {
-                    presentLexeme = iterSpecial->second;
-                    if (presentLexeme == STRCON) {
+                    presentToken = iterSpecial->second;
+                    if (presentToken == STRCON) {
                         // specially handle comments
                         while (bufCh != '\"') {
                             presentString += bufCh;
@@ -158,15 +158,15 @@ void Lexer::nextLexeme() {
 }
 
 /*
- * Overview: Get present lexeme.
+ * Overview: Get present token.
  */
 std::string Lexer::getPresentString() {
     return presentString;
 }
 
 /*
- * Overview: Get present lexeme's symbol.
+ * Overview: Get present Token's symbol.
  */
-LexemeSymbol Lexer::getPresentLexeme() {
-    return presentLexeme;
+TokenSymbol Lexer::getPresentToken() {
+    return presentToken;
 }

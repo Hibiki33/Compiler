@@ -8,10 +8,10 @@ int main() {
     Lexer lexicalAnalyzer(testFileName);
     std::ofstream outFile(outFileName);
 
-    while (lexicalAnalyzer.getPresentLexeme() != END) {
-        lexicalAnalyzer.nextLexeme();
-        if (lexicalAnalyzer.getPresentLexeme() != END) {
-            outFile << lexemeSymbolNames[lexicalAnalyzer.getPresentLexeme()];
+    while (lexicalAnalyzer.getPresentToken() != END) {
+        lexicalAnalyzer.nextToken();
+        if (lexicalAnalyzer.getPresentToken() != END) {
+            outFile << tokenSymbolNames[lexicalAnalyzer.getPresentToken()];
             outFile << " " << lexicalAnalyzer.getPresentString() << std::endl;
         }
     }

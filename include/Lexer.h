@@ -15,7 +15,7 @@
 #include <fstream>
 #include <map>
 
-enum LexemeSymbol {
+enum TokenSymbol {
     BEGIN,
 
     IDENFR,     // Ident
@@ -64,7 +64,7 @@ enum LexemeSymbol {
     END
 };
 
-const std::string lexemeSymbolNames[] {
+const std::string tokenSymbolNames[] {
         "",             // BEGIN
 
         "IDENFR",       // Ident
@@ -115,7 +115,7 @@ const std::string lexemeSymbolNames[] {
 
 class Lexer {
 public:
-    void nextLexeme();
+    void nextToken();
 
     explicit Lexer(const std::string& fileName);
 
@@ -123,18 +123,18 @@ public:
 
     std::string getPresentString();
 
-    LexemeSymbol getPresentLexeme();
+    TokenSymbol getPresentToken();
 
 private:
     std::ifstream sourceFile;
 
-    std::map<std::string, LexemeSymbol> reservedWords;
-    std::map<std::string, LexemeSymbol> reservedSingle;
-    std::map<std::string, LexemeSymbol> reservedSpecial;
+    std::map<std::string, TokenSymbol> reservedWords;
+    std::map<std::string, TokenSymbol> reservedSingle;
+    std::map<std::string, TokenSymbol> reservedSpecial;
 
     std::string presentString;
 
-    LexemeSymbol presentLexeme;
+    TokenSymbol presentToken;
 
     char bufCh;
 };
