@@ -127,10 +127,9 @@ void Lexer::nextToken() {
                 } else if (iterSpecial->second == LMLC) {
                     // specially handle comments
                     // recursively invoke 'nextToken' to get the next valid token
+                    char tempCh = (char)sourceFile.get();
                     bufCh = (char)sourceFile.get();
-                    char tempCh = bufCh;
-                    bufCh = (char)sourceFile.get();
-                    while (!(tempCh == '*' && bufCh == '/')) {
+                    while (!(tempCh == '*' && bufCh == '/') && bufCh != EOF) {
                         // record line number
                         if (bufCh == '\n') {
                             presentLineNumber++;
