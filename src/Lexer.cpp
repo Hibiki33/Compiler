@@ -137,6 +137,9 @@ void Lexer::nextToken() {
                         tempCh = bufCh;
                         bufCh = (char)sourceFile.get();
                     }
+                    if (bufCh == EOF) {
+                        std::cerr << "WITHOUT MATCHING RMLC" << std::endl;
+                    }
                     bufCh = (char)sourceFile.get();
                     nextToken();
                 } else {
@@ -160,7 +163,7 @@ void Lexer::nextToken() {
                     }
                     // nothing else to do for special single symbols
                 } else {
-                    std::cerr << "ERROR" << std::endl;
+                    std::cerr << "INVALID TOKEN" << std::endl;
                 }
             }
         }
