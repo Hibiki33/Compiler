@@ -89,29 +89,35 @@ void Lexer::nextToken() {
         for (; std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
+
     } else if (std::isalpha(bufCh) || bufCh == '_') {
         // parse identifier variables or reserved words
         for (; std::isalpha(bufCh) || bufCh == '_' || std::isdigit(bufCh); bufCh = (char)sourceFile.get()) {
             presentString += bufCh;
         }
+
         auto iter = reservedWords.find(presentString);
         if (iter != reservedWords.end()) {
             presentToken = iter->second;
         } else {
             presentToken = IDENFR;
         }
+
     } else {
         // parse reserved symbols
         presentString += bufCh;
+
         auto iterSingle = reservedSingle.find(presentString);
         if (iterSingle != reservedSingle.end()) {
             // definitely single symbols
             presentToken = iterSingle->second;
             bufCh = (char)sourceFile.get();
+
         } else {
             // possibly single symbols or double symbols
             bufCh = (char)sourceFile.get();
             std::string tempString = presentString + bufCh;
+
             auto iterSpecial = reservedSpecial.find(tempString);
             if (iterSpecial != reservedSpecial.end()) {
                 // double symbols or comments
@@ -124,6 +130,7 @@ void Lexer::nextToken() {
                     presentLineNumber++;
                     bufCh = (char)sourceFile.get();
                     nextToken();
+
                 } else if (iterSpecial->second == LMLC) {
                     // specially handle comments
                     // recursively invoke 'nextToken' to get the next valid token
@@ -137,16 +144,20 @@ void Lexer::nextToken() {
                         tempCh = bufCh;
                         bufCh = (char)sourceFile.get();
                     }
+
                     if (bufCh == EOF) {
                         std::cerr << "WITHOUT MATCHING RMLC" << std::endl;
                     }
+
                     bufCh = (char)sourceFile.get();
                     nextToken();
+
                 } else {
                     // double symbols
                     presentString += bufCh;
                     presentToken = iterSpecial->second;
                     bufCh = (char)sourceFile.get();
+
                 }
             } else {
                 iterSpecial = reservedSpecial.find(presentString);
@@ -162,8 +173,10 @@ void Lexer::nextToken() {
                         bufCh = (char)sourceFile.get();
                     }
                     // nothing else to do for special single symbols
+
                 } else {
                     std::cerr << "INVALID TOKEN" << std::endl;
+
                 }
             }
         }
