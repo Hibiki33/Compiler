@@ -14,7 +14,7 @@
 
 class Parser {
 public:
-    explicit Parser(std::vector<Token> tokens);
+    explicit Parser(const std::vector<Token>& tokens);
 
     ~Parser();
 

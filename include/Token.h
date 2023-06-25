@@ -6,13 +6,14 @@
 #define COMPILER_TOKEN_H
 
 #pragma once
+#include <string>
 
-#define Token std::tuple<std::string, std::string, int>
-
-#define getTokenSymbol(x) std::get<0>(x)
-#define getTokenString(x) std::get<1>(x)
-#define getTokenLineNumber std::get<2>(x)
-#define makeToken(x, y, z) std::make_tuple(x, y, z)
+// #define Token std::tuple<std::string, std::string, int>
+//
+// #define getTokenSymbol(x) std::get<0>(x)
+// #define getTokenString(x) std::get<1>(x)
+// #define getTokenLineNumber std::get<2>(x)
+// #define makeToken(x, y, z) std::make_tuple(x, y, z)
 
 enum TokenSymbol {
     BEGIN,
@@ -110,6 +111,23 @@ const std::string tokenSymbolNames[] {
         "",             // */
 
         ""              // END
+};
+
+class Token {
+public:
+    explicit Token(const std::string& sym, const std::string& str, int lin);
+
+    ~Token();
+
+    std::string getTokenSymbol();
+    std::string getTokenString();
+    int getTokenLineNumber() const;
+
+private:
+    std::string tokenSymbol;
+    std::string tokenString;
+    int tokenLineNumber;
+
 };
 
 #endif //COMPILER_TOKEN_H
