@@ -15,11 +15,11 @@
 
 class Lexer {
 public:
-    void nextToken();
-
     explicit Lexer(const std::string& fileName);
 
     ~Lexer();
+
+    void nextToken();
 
     std::string getPresentString();
     TokenSymbol getPresentToken();
