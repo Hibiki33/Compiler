@@ -223,6 +223,6 @@ Token Lexer::getToken(int index) {
 /*
  * Overview: Get 'tokenList'.
  */
-std::vector<Token > Lexer::getTokenList() {
+std::vector<Token> Lexer::getTokenList() {
     return tokenList;
 }

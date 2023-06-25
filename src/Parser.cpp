@@ -3,3 +3,9 @@
 //
 
 #include "Parser.h"
+
+Parser::Parser(std::vector<Token> tokens) {
+    tokenList.assign(tokens.begin(), tokens.end());
+}
+
+Parser::~Parser() = default;
