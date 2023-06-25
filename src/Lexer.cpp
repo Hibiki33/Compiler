@@ -209,7 +209,7 @@ int Lexer::getPresentLineNumber() const {
  * Overview: Add new token to 'tokenList'.
  */
 void Lexer::addToken(TokenSymbol sym, const std::string& str, int lin) {
-    auto token = makeToken(tokenSymbolNames[sym], str, lin);
+    auto token = Token(tokenSymbolNames[sym], str, lin);
     tokenList.push_back(token);
 }
 
