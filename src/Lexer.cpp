@@ -180,6 +180,8 @@ void Lexer::nextToken() {
             }
         }
     }
+
+    addToken(presentToken, presentString, presentLineNumber);
 }
 
 /*
@@ -199,6 +201,21 @@ TokenSymbol Lexer::getPresentToken() {
 /*
  * Overview: Get token's line number.
  */
-int Lexer::getPresentLineNumber() {
+int Lexer::getPresentLineNumber() const {
     return presentLineNumber;
+}
+
+/*
+ * Overview: Add new token to 'tokenList'.
+ */
+void Lexer::addToken(TokenSymbol sym, const std::string& str, int lin) {
+    auto token = std::make_tuple(tokenSymbolNames[sym], str, lin);
+    tokenList.push_back(token);
+}
+
+/*
+ * Overview: Get a token from 'tokenList' with 'index'.
+ */
+std::tuple<std::string, std::string, int> Lexer::getToken(int index) {
+    return tokenList[index];
 }

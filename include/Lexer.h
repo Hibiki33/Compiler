@@ -122,10 +122,8 @@ public:
     ~Lexer();
 
     std::string getPresentString();
-
     TokenSymbol getPresentToken();
-
-    int getPresentLineNumber();
+    int getPresentLineNumber() const;
 
 private:
     std::ifstream sourceFile;
@@ -135,10 +133,12 @@ private:
     std::map<std::string, TokenSymbol> reservedSpecial;
 
     std::string presentString;
-
     TokenSymbol presentToken;
-
     int presentLineNumber;
+
+    std::vector<std::tuple<std::string, std::string, int>> tokenList;
+    void addToken(TokenSymbol sym, const std::string& str, int lin);
+    std::tuple<std::string, std::string, int> getToken(int index);
 
     char bufCh;
 };
