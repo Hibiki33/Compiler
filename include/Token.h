@@ -5,6 +5,8 @@
 #ifndef COMPILER_TOKEN_H
 #define COMPILER_TOKEN_H
 
+#pragma once
+
 #define Token std::tuple<std::string, std::string, int>
 
 #define getTokenSymbol(x) std::get<0>(x)
