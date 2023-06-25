@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Lexer.h"
+#include "Parser.h"
+#include "Token.h"
 
 int main() {
     std::string testFileName = "./testfiles/LexicalAnalyze/testfile.txt";
@@ -17,9 +19,9 @@ int main() {
         }
     }
 
-    // for (auto token : lexicalAnalyzer.tokenList) {
-    //    std::cout << tokenSymbolNames[std::get<0>(token)] << " " << std::get<1>(token) << std::endl;
-    // }
+     for (auto token : lexicalAnalyzer.tokenList) {
+        std::cout << getTokenSymbol(token) << " " << getTokenString(token) << std::endl;
+     }
 
 
     return 0;

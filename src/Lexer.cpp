@@ -209,13 +209,13 @@ int Lexer::getPresentLineNumber() const {
  * Overview: Add new token to 'tokenList'.
  */
 void Lexer::addToken(TokenSymbol sym, const std::string& str, int lin) {
-    auto token = std::make_tuple(tokenSymbolNames[sym], str, lin);
+    auto token = makeToken(tokenSymbolNames[sym], str, lin);
     tokenList.push_back(token);
 }
 
 /*
  * Overview: Get a token from 'tokenList' with 'index'.
  */
-std::tuple<std::string, std::string, int> Lexer::getToken(int index) {
+Token Lexer::getToken(int index) {
     return tokenList[index];
 }
