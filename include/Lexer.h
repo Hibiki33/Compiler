@@ -25,8 +25,8 @@ public:
     TokenSymbol getPresentToken();
     int getPresentLineNumber() const;
 
-    std::vector<Token> tokenList;
     Token getToken(int index);
+    std::vector<Token> getTokenList();
 
 private:
     std::ifstream sourceFile;
@@ -39,6 +39,7 @@ private:
     TokenSymbol presentToken;
     int presentLineNumber;
 
+    std::vector<Token> tokenList;
     void addToken(TokenSymbol sym, const std::string& str, int lin);
 
     char bufCh;

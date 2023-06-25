@@ -219,3 +219,10 @@ void Lexer::addToken(TokenSymbol sym, const std::string& str, int lin) {
 Token Lexer::getToken(int index) {
     return tokenList[index];
 }
+
+/*
+ * Overview: Get 'tokenList'.
+ */
+std::vector<Token > Lexer::getTokenList() {
+    return tokenList;
+}

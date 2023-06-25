@@ -19,7 +19,7 @@ int main() {
         }
     }
 
-     for (auto token : lexicalAnalyzer.tokenList) {
+     for (auto token : lexicalAnalyzer.getTokenList()) {
         std::cout << getTokenSymbol(token) << " " << getTokenString(token) << std::endl;
      }
 
