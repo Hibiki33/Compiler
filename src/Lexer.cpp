@@ -185,17 +185,17 @@ void Lexer::nextToken() {
 }
 
 /*
- * Overview: Get present token.
- */
-std::string Lexer::getPresentString() {
-    return presentString;
-}
-
-/*
  * Overview: Get present token's symbol.
  */
 TokenSymbol Lexer::getPresentToken() {
     return presentToken;
+}
+
+/*
+ * Overview: Get present token.
+ */
+std::string Lexer::getPresentString() {
+    return presentString;
 }
 
 /*

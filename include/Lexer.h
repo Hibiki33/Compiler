@@ -21,8 +21,8 @@ public:
 
     void nextToken();
 
-    std::string getPresentString();
     TokenSymbol getPresentToken();
+    std::string getPresentString();
     int getPresentLineNumber() const;
 
     Token getToken(int index);
@@ -35,8 +35,8 @@ private:
     std::map<std::string, TokenSymbol> reservedSingle;
     std::map<std::string, TokenSymbol> reservedSpecial;
 
-    std::string presentString;
     TokenSymbol presentToken;
+    std::string presentString;
     int presentLineNumber;
 
     std::vector<Token> tokenList;
