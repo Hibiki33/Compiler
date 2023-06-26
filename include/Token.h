@@ -115,6 +115,8 @@ const std::string tokenSymbolNames[] {
 
 class Token {
 public:
+    Token();
+
     explicit Token(const std::string& sym, const std::string& str, int lin);
 
     ~Token();
@@ -126,7 +128,7 @@ public:
 private:
     std::string tokenSymbol;
     std::string tokenString;
-    int tokenLineNumber;
+    int tokenLineNumber{};
 
 };
 

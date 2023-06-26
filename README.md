@@ -7,7 +7,7 @@ Rules and methods.
 Grammar:
 
 ```
-CompUnit → {Decl} {FuncDef} MainFuncDe
+CompUnit → {Decl} {FuncDef} MainFuncDecl
 
 Decl → ConstDecl | VarDecl
 
@@ -36,6 +36,8 @@ FuncFParams → FuncFParam { ',' FuncFParam }
 FuncFParam → BType Ident ['[' ']' { '[' ConstExp ']' }]
 
 Block → '{' { BlockItem } '}'
+
+BlockItem → Decl | Stmt
 
 Stmt → LVal '=' Exp ';'
      | [Exp] ';'

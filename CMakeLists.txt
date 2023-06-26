@@ -13,4 +13,5 @@ add_executable(
         main.cpp
         src/Lexer.cpp
         src/Parser.cpp
-        src/Token.cpp)
+        src/Token.cpp
+        src/Ast.cpp )

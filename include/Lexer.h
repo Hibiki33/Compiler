@@ -28,6 +28,8 @@ public:
     Token getToken(int index);
     std::vector<Token> getTokenList();
 
+    std::vector<Token> sourceToTokens();
+
 private:
     std::ifstream sourceFile;
 

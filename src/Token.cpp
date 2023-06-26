@@ -21,5 +21,7 @@ int Token::getTokenLineNumber() const {
     return tokenLineNumber;
 }
 
+Token::Token() = default;
+
 Token::~Token() = default;
 

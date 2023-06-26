@@ -226,3 +226,14 @@ Token Lexer::getToken(int index) {
 std::vector<Token> Lexer::getTokenList() {
     return tokenList;
 }
+
+/*
+ * Overview: Make 'sourceFile' into 'tokenList'.
+ *  Use 'nextToken' to walk through each token.
+ */
+std::vector<Token> Lexer::sourceToTokens() {
+    while (getPresentToken() != END) {
+        nextToken();
+    }
+    return tokenList;
+}
