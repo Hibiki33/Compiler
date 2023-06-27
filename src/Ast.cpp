@@ -5,6 +5,21 @@
 #include "Ast.h"
 
 /*
+ * class BType
+ */
+BType::BType(BType::Type type) {
+    this->type = type;
+}
+
+void BType::dump() const {
+    std::cout << "BType { ";
+    if (type == INT) {
+        std::cout << "int";
+    }
+    std::cout << " }";
+}
+
+/*
  * class Decl
  */
 Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
@@ -88,7 +103,5 @@ void BlockItem::dump() const {
     }
     std::cout << " }";
 }
-
-
 
 

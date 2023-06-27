@@ -12,6 +12,8 @@
 #include "Token.h"
 
 class BaseASTNode;
+class BType;
+
 class CompUnit;
 class Decl;
 class Def;
@@ -29,6 +31,23 @@ public:
     virtual  ~BaseASTNode() = default;
 
     virtual void dump() const = 0;
+};
+
+// BType -> 'int'
+class BType : public BaseASTNode {
+    enum Type {
+        INT,
+    };
+
+public:
+    explicit BType() = default;
+    explicit BType(Type type);
+
+    void dump() const override;
+
+private:
+    Type type;
+
 };
 
 // Def -> Ident {'[' Exp ']'} ['=' Init]
