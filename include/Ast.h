@@ -158,6 +158,39 @@ private:
 
 };
 
+// FuncFParam -> BType Ident ['[' ']' { '[' ConstExp ']' }]
+class FuncFParam : public BaseASTNode {
+public:
+    explicit FuncFParam() = default;
+    explicit FuncFParam(const BType& bType,
+                        const Ident& ident);
+    explicit FuncFParam(const BType& bType,
+                        const Ident& ident,
+                        const std::vector<ConstExp>& constExps);
+
+    void dump() const override;
+
+private:
+    BType bType;
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    bool isArray{};
+
+};
+
+// FuncFParams -> FuncFParam { ',' FuncFParam }
+class FuncFParams : public BaseASTNode {
+public:
+    explicit FuncFParams() = default;
+    explicit FuncFParams(const std::vector<FuncFParam>& funcFParams);
+
+    void dump() const override;
+
+private:
+    std::vector<FuncFParam> funcFParams;
+
+};
+
 // FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
 class FuncDef : public BaseASTNode{
 public:
@@ -418,7 +451,6 @@ public:
 
 
 };
-
 
 
 

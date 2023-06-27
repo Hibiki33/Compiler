@@ -388,3 +388,56 @@ void FuncDef::dump() const {
     block.dump();
     std::cout << " }";
 }
+
+/*
+ * class FuncFParams
+ */
+FuncFParams::FuncFParams(const std::vector<FuncFParam>& funcFParams) {
+    this->funcFParams = funcFParams;
+}
+
+void FuncFParams::dump() const {
+    std::cout << "FuncFParams { ";
+    for (auto iter = funcFParams.begin(); iter != funcFParams.end(); iter++) {
+        if (std::next(iter, 1) != funcFParams.end()) {
+            iter->dump();
+            std::cout << ", ";
+        } else {
+            iter->dump();
+        }
+    }
+    std::cout << " }";
+}
+
+/*
+ * class FuncFParam
+ */
+FuncFParam::FuncFParam(const BType &bType,
+                       const Ident &ident) {
+    this->bType = bType;
+    this->ident = ident;
+    isArray = false;
+}
+
+FuncFParam::FuncFParam(const BType &bType,
+                       const Ident &ident,
+                       const std::vector<ConstExp>& constExps) {
+    this->bType = bType;
+    this->ident = ident;
+    this->constExps = constExps;
+    isArray = true;
+}
+
+void FuncFParam::dump() const {
+    std::cout << "FuncFParam { ";
+    bType.dump();
+    ident.dump();
+    if (isArray) {
+        for (const auto & constExp : constExps) {
+            std::cout << "[";
+            constExp.dump();
+            std::cout << "]";
+        }
+    }
+    std::cout << " }";
+}
