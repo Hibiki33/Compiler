@@ -35,13 +35,31 @@ public:
 
 // BType -> 'int'
 class BType : public BaseASTNode {
+public:
     enum Type {
         INT,
     };
 
-public:
     explicit BType() = default;
     explicit BType(Type type);
+
+    void dump() const override;
+
+private:
+    Type type;
+
+};
+
+// FuncType -> 'void' | 'int'
+class FuncType : public BaseASTNode {
+public:
+    enum Type {
+        VOID,
+        INT,
+    };
+
+    explicit FuncType() = default;
+    explicit FuncType(Type type);
 
     void dump() const override;
 

@@ -20,6 +20,23 @@ void BType::dump() const {
 }
 
 /*
+ * class FuncType
+ */
+FuncType::FuncType(FuncType::Type type) {
+    this->type = type;
+}
+
+void FuncType::dump() const {
+    std::cout << "FuncType { ";
+    if (type == VOID) {
+        std::cout << "void";
+    } else if (type == INT) {
+        std::cout << "int";
+    }
+    std::cout << " }";
+}
+
+/*
  * class Decl
  */
 Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
