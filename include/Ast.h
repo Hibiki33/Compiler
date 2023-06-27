@@ -112,13 +112,29 @@ private:
 
 };
 
+// UnaryOp
+class UnaryOp : public BaseASTNode {
+public:
+    explicit UnaryOp() = default;
+    explicit UnaryOp(const Token& token);
+
+    void dump() const override;
+
+private:
+    Token token;
+
+};
+
 // Number -> IntConst
 class Number : public BaseASTNode {
 public:
+    explicit Number() = default;
+    explicit Number(const IntConst& intConst);
 
+    void dump() const override;
 
 private:
-
+    IntConst intConst;
 
 };
 

@@ -77,6 +77,32 @@ void FormatString::dump() const {
 }
 
 /*
+ * class UnaryOp
+ */
+UnaryOp::UnaryOp(const Token &token) {
+    this->token = token;
+}
+
+void UnaryOp::dump() const {
+    std::cout << "UnaryOp { ";
+    std::cout << token;
+    std::cout << " }";
+}
+
+/*
+ * class Number
+ */
+Number::Number(const IntConst &intConst) {
+    this->intConst = intConst;
+}
+
+void Number::dump() const {
+    std::cout << "UnaryOp { ";
+    intConst.dump();
+    std::cout << " }";
+}
+
+/*
  * class Decl
  */
 Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
