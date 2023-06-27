@@ -188,13 +188,60 @@ private:
     Block block;
 };
 
+// ConstExp → AddExp
+class ConstExp : public BaseASTNode {
+public:
+    explicit ConstExp() = default;
+    explicit ConstExp(const AddExp& addExp);
+
+    void dump() const override;
+
+private:
+    AddExp addExp;
+
+};
+
 // ConstInitVal -> ConstExp
 //              | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
 class ConstInitVal : public BaseASTNode {
 public:
+    enum Type {
+        EXP,
+        ARR,
+    };
+
+    explicit ConstInitVal() = default;
+    explicit ConstInitVal(const ConstExp& constExp);
+    explicit ConstInitVal(const std::vector<ConstInitVal>& constInitVals);
+
+    void dump() const override;
 
 private:
+    ConstExp constExp;
+    std::vector<ConstInitVal> constInitVals;
 
+    Type type{};
+};
+
+// InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'
+class InitVal : public BaseASTNode {
+public:
+    enum Type {
+        EXP,
+        ARR,
+    };
+
+    explicit InitVal() = default;
+    explicit InitVal(const Exp& exp);
+    explicit InitVal(const std::vector<InitVal>& initVals);
+
+    void dump() const override;
+
+private:
+    ConstExp exp;
+    std::vector<InitVal> initVals;
+
+    Type type{};
 };
 
 
@@ -231,6 +278,21 @@ private:
 
 };
 
+// VarDecl -> BType VarDef { ',' VarDef } ';'
+class VarDecl : public BaseASTNode {
+public:
+    explicit VarDecl() = default;
+    explicit VarDecl(const BType& bType,
+                     const std::vector<VarDef>& varDefs);
+
+    void dump() const override;
+
+private:
+    BType bType;
+    std::vector<VarDef> varDefs;
+
+};
+
 // Decl -> ConstDecl | VarDecl;
 class Decl : public BaseASTNode {
 public:
@@ -249,7 +311,7 @@ private:
     ConstDecl constDecl;
     VarDecl varDecl;
 
-    Type type;
+    Type type{};
 };
 
 // Stmt -> LVal '=' Exp ';'

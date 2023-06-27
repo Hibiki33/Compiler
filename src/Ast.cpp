@@ -206,6 +206,7 @@ void ConstDecl::dump() const {
             iter->dump();
         }
     }
+    std::cout << ";";
     std::cout << " }";
 }
 
@@ -228,6 +229,105 @@ void ConstDef::dump() const {
         iter->dump();
         std::cout << "]";
     }
+    std::cout << "=";
     constInitVal.dump();
+    std::cout << " }";
+}
+
+/*
+ * class ConstInitVal
+ */
+ConstInitVal::ConstInitVal(const ConstExp& constExp) {
+    this->constExp = constExp;
+    type = EXP;
+}
+
+ConstInitVal::ConstInitVal(const std::vector<ConstInitVal>& constInitVals) {
+    this->constInitVals = constInitVals;
+    type = ARR;
+}
+
+void ConstInitVal::dump() const {
+    std::cout << "ConstInitVal { ";
+    if (type == EXP) {
+        constExp.dump();
+    } else {
+        std::cout << "{";
+        for (auto iter = constInitVals.begin(); iter != constInitVals.end(); iter++) {
+            if (std::next(iter, 1) != constInitVals.end()) {
+                iter->dump();
+                std::cout << ", ";
+            } else {
+                iter->dump();
+            }
+        }
+        std::cout << "}";
+    }
+    std::cout << " }";
+}
+
+/*
+ * class InitVal
+ */
+InitVal::InitVal(const Exp& exp) {
+    this->exp = exp;
+    type = EXP;
+}
+
+InitVal::InitVal(const std::vector<InitVal>& initVals) {
+    this->initVals = initVals;
+    type = ARR;
+}
+
+void InitVal::dump() const {
+    std::cout << "InitVal { ";
+    if (type == EXP) {
+        exp.dump();
+    } else {
+        std::cout << "{";
+        for (auto iter = initVals.begin(); iter != initVals.end(); iter++) {
+            if (std::next(iter, 1) != initVals.end()) {
+                iter->dump();
+                std::cout << ", ";
+            } else {
+                iter->dump();
+            }
+        }
+        std::cout << "}";
+    }
+    std::cout << " }";
+}
+
+/*
+ * class ConstExp
+ */
+ConstExp::ConstExp(const AddExp &addExp) {
+    this->addExp = addExp;
+}
+
+void ConstExp::dump() const {
+    std::cout << "ConstExp { ";
+    addExp.dump();
+    std::cout << " }";
+}
+
+
+VarDecl::VarDecl(const BType &bType,
+                 const std::vector<VarDef> &varDefs) {
+    this->bType = bType;
+    this->varDefs = varDefs;
+}
+
+void VarDecl::dump() const {
+    std::cout << "VarDecl { ";
+    bType.dump();
+    for (auto iter = varDefs.begin(); iter != varDefs.end(); iter++) {
+        if (std::next(iter, 1) != varDefs.end()) {
+            iter->dump();
+            std::cout << ", ";
+        } else {
+            iter->dump();
+        }
+    }
     std::cout << " }";
 }
