@@ -12,24 +12,44 @@
 #include "Token.h"
 
 class BaseASTNode;
+
+class CompUnit;
+class Decl;
+class ConstDecl;
 class BType;
+class ConstDef;
+class ConstInitVal;
+class VarDecl;
+class VarDef;
+class InitVal;
+class FuncDef;
+class MainFuncDef;
 class FuncType;
+class FuncFParams;
+class FuncFParam;
+class Block;
+class BlockItem;
+class Stmt;
+class Exp;
+class Cond;
+class LVal;
+class PrimaryExp;
+class Number;
+class UnaryExp;
+class FuncRParams;
+class MulExp;
+class AddExp;
+class RelExp;
+class EqExp;
+class LAndExp;
+class LOrExp;
+class ConstExp;
 
 class IntConst;
 class Ident;
 class FormatString;
+class UnaryOp;
 
-class CompUnit;
-class Decl;
-class Def;
-class ConstDecl;
-class BType;
-class ConstDef;
-class Init;
-class FuncDef;
-class MainFuncDef;
-class Block;
-class Stmt;
 
 class BaseASTNode {
 public:
@@ -139,14 +159,6 @@ private:
 };
 
 
-// Def -> Ident {'[' Exp ']'} ['=' Init]
-class Def {
-public:
-
-private:
-
-};
-
 // FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
 class FuncDef {
 public:
@@ -176,22 +188,68 @@ private:
     Block block;
 };
 
-// Decl -> ('const') 'int' Def {',' Def} ';'
-class Decl : public BaseASTNode {
+// ConstInitVal -> ConstExp
+//              | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
+class ConstInitVal : public BaseASTNode {
 public:
-    explicit Decl() = default;
-    explicit Decl(bool constant, const Token& bType, const std::vector<Def>& defs);
+
+private:
+
+};
+
+
+//  ConstDef → Ident { '[' ConstExp ']' } '=' ConstInitVal
+class ConstDef : public BaseASTNode {
+public:
+    explicit ConstDef() = default;
+    explicit ConstDef(const Ident& ident,
+                      const std::vector<ConstExp>& constExps,
+                      const ConstInitVal& constInitVal);
 
     void dump() const override;
 
-    bool isConstant() const;
-    Token getBType();
-    std::vector<Def> getDefs();
+private:
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    ConstInitVal constInitVal;
+
+};
+
+// ConstDecl -> 'const' BType ConstDef { ',' ConstDef } ';'
+class ConstDecl : public BaseASTNode {
+public:
+    explicit ConstDecl() = default;
+    explicit ConstDecl(const BType& bType,
+                       const std::vector<ConstDef>& constDefs);
+
+    void dump() const override;
+
 
 private:
-    bool constant{};
-    Token bType;
-    std::vector<Def> defs;
+    BType bType;
+    std::vector<ConstDef> constDefs;
+
+};
+
+// Decl -> ConstDecl | VarDecl;
+class Decl : public BaseASTNode {
+public:
+    enum Type {
+        CONSTDECL,
+        VARDECL,
+    };
+
+    explicit Decl() = default;
+    explicit Decl(const ConstDecl& constDecl);
+    explicit Decl(const VarDecl& varDecl);
+
+    void dump() const override;
+
+private:
+    ConstDecl constDecl;
+    VarDecl varDecl;
+
+    Type type;
 };
 
 // Stmt -> LVal '=' Exp ';'
@@ -215,6 +273,11 @@ private:
 // BlockItem -> Decl | Stmt
 class BlockItem : public BaseASTNode {
 public:
+    enum Type {
+        DECL,
+        STMT,
+    };
+
     explicit BlockItem() = default;
     explicit BlockItem(const Decl& decl);
     explicit BlockItem(const Stmt& stmt);
@@ -225,9 +288,7 @@ private:
     Decl decl;
     Stmt stmt;
 
-#define DECL true
-#define STMT false
-    bool type = false;
+    Type type;
 };
 
 // CompUnit ->  {Decl} {FuncDef} MainFuncDef
@@ -243,25 +304,12 @@ private:
     std::vector<FuncDef> funcDefs;
     MainFuncDef mainFuncDef;
 
-
 };
 
 
-
-
-
-
-
-
-
-
-// Init -> Exp | InitArray
-class Init {
-
-};
 
 // Exp -> AddExp
-class Exp : public Init {
+class Exp : public BaseASTNode {
 
 };
 

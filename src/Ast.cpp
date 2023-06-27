@@ -105,26 +105,24 @@ void Number::dump() const {
 /*
  * class Decl
  */
-Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
-    this->constant = constant;
-    this->bType = bType;
-    this->defs = defs;
+Decl::Decl(const ConstDecl &constDecl) {
+    this->constDecl = constDecl;
+    type = CONSTDECL;
 }
 
-bool Decl::isConstant() const {
-    return constant;
-}
-
-Token Decl::getBType() {
-    return bType;
-}
-
-std::vector<Def> Decl::getDefs() {
-    return defs;
+Decl::Decl(const VarDecl &varDecl) {
+    this->varDecl = varDecl;
+    type = VARDECL;
 }
 
 void Decl::dump() const {
-
+    std::cout << "Decl { ";
+    if (type == CONSTDECL) {
+        constDecl.dump();
+    } else {
+        varDecl.dump();
+    }
+    std::cout << " }";
 }
 
 /*
@@ -187,5 +185,49 @@ void BlockItem::dump() const {
     std::cout << " }";
 }
 
+/*
+ * class ConstDecl
+ */
+ConstDecl::ConstDecl(const BType &bType,
+                     const std::vector<ConstDef>& constDefs) {
+    this->bType = bType;
+    this->constDefs = constDefs;
+}
 
+void ConstDecl::dump() const {
+    std::cout << "ConstDecl { ";
+    std::cout << "const";
+    bType.dump();
+    for (auto iter = constDefs.begin(); iter != constDefs.end(); iter++) {
+        if (std::next(iter, 1) != constDefs.end()) {
+            iter->dump();
+            std::cout << ", ";
+        } else {
+            iter->dump();
+        }
+    }
+    std::cout << " }";
+}
 
+/*
+ * class ConstDef
+ */
+ConstDef::ConstDef(const Ident& ident,
+                   const std::vector<ConstExp>& constExps,
+                   const ConstInitVal& constInitVal) {
+    this->ident = ident;
+    this->constExps = constExps;
+    this->constInitVal = constInitVal;
+}
+
+void ConstDef::dump() const {
+    std::cout << "ConstDef { ";
+    ident.dump();
+    for (auto iter = constExps.begin(); iter != constExps.end(); iter++) {
+        std::cout << "[";
+        iter->dump();
+        std::cout << "]";
+    }
+    constInitVal.dump();
+    std::cout << " }";
+}
