@@ -158,12 +158,22 @@ private:
 
 };
 
-
 // FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
-class FuncDef {
+class FuncDef : public BaseASTNode{
 public:
+    explicit FuncDef() = default;
+    explicit FuncDef(const FuncType& funcType,
+                     const Ident& ident,
+                     const FuncFParams& funcFParams,
+                     const Block& block);
+
+    void dump() const override;
 
 private:
+    FuncType funcType;
+    Ident ident;
+    FuncFParams funcFParams;
+    Block block;
 
 };
 
@@ -244,6 +254,27 @@ private:
     Type type{};
 };
 
+// VarDef -> Ident { '[' ConstExp ']' }
+//         | Ident { '[' ConstExp ']' } '=' InitVal
+class VarDef : public BaseASTNode {
+public:
+    explicit VarDef() = default;
+    explicit VarDef(const Ident& ident,
+                    const std::vector<ConstExp>& constExps);
+    explicit VarDef(const Ident& ident,
+                    const std::vector<ConstExp>& constExps,
+                    const InitVal& initVal);
+
+    void dump() const override;
+
+private:
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    InitVal initVal;
+
+    bool isInit{};
+
+};
 
 //  ConstDef → Ident { '[' ConstExp ']' } '=' ConstInitVal
 class ConstDef : public BaseASTNode {

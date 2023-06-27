@@ -138,6 +138,7 @@ MainFuncDef::MainFuncDef(const Block& block) {
 
 void MainFuncDef::dump() const {
     std::cout << "MainFuncDef { ";
+    std::cout << "int main()";
     block.dump();
     std::cout << " }";
 }
@@ -154,9 +155,9 @@ void Block::dump() const {
 /*
  * class CompUnit
  */
-CompUnit::CompUnit(const std::vector<Decl> &decls,
-                   const std::vector<FuncDef> &funcDefs,
-                   const MainFuncDef &mainFuncDef) {
+CompUnit::CompUnit(const std::vector<Decl>& decls,
+                   const std::vector<FuncDef>& funcDefs,
+                   const MainFuncDef& mainFuncDef) {
     this->decls = decls;
     this->funcDefs = funcDefs;
     this->mainFuncDef = mainFuncDef;
@@ -224,9 +225,9 @@ ConstDef::ConstDef(const Ident& ident,
 void ConstDef::dump() const {
     std::cout << "ConstDef { ";
     ident.dump();
-    for (auto iter = constExps.begin(); iter != constExps.end(); iter++) {
+    for (const auto & constExp : constExps) {
         std::cout << "[";
-        iter->dump();
+        constExp.dump();
         std::cout << "]";
     }
     std::cout << "=";
@@ -311,7 +312,9 @@ void ConstExp::dump() const {
     std::cout << " }";
 }
 
-
+/*
+ * class VarDecl
+ */
 VarDecl::VarDecl(const BType &bType,
                  const std::vector<VarDef> &varDefs) {
     this->bType = bType;
@@ -329,5 +332,59 @@ void VarDecl::dump() const {
             iter->dump();
         }
     }
+    std::cout << " }";
+}
+
+/*
+ * class VarDef
+ */
+VarDef::VarDef(const Ident& ident,
+               const std::vector<ConstExp>& constExps) {
+    this->ident = ident;
+    this->constExps = constExps;
+    isInit = false;
+}
+
+VarDef::VarDef(const Ident& ident,
+               const std::vector<ConstExp>& constExps,
+               const InitVal& initVal) {
+    this->ident = ident;
+    this->constExps = constExps;
+    this->initVal = initVal;
+    isInit = true;
+}
+
+void VarDef::dump() const {
+    std::cout << "VarDef { ";
+    ident.dump();
+    for (const auto & constExp : constExps) {
+        std::cout << "[";
+        constExp.dump();
+        std::cout << "]";
+    }
+    std::cout << " }";
+}
+
+/*
+ * FuncDef
+ */
+FuncDef::FuncDef(const FuncType& funcType,
+                 const Ident& ident,
+                 const FuncFParams& funcFParams,
+                 const Block& block) {
+    this->funcType = funcType;
+    this->ident = ident;
+    this->funcFParams = funcFParams;
+    this->block = block;
+}
+
+void FuncDef::dump() const {
+    std::cout << "FuncDef { ";
+    funcType.dump();
+    ident.dump();
+    std::cout << "(";
+    funcFParams.dump();
+    std::cout << ")";
+    block.dump();
     std::cout << " }";
 }
