@@ -191,6 +191,19 @@ private:
 
 };
 
+// Block
+class Block : public BaseASTNode {
+public:
+    explicit Block() = default;
+    explicit Block(const std::vector<BlockItem>& blockItems);
+
+    void dump() const override;
+
+public:
+    std::vector<BlockItem> blockItems;
+
+};
+
 // FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
 class FuncDef : public BaseASTNode{
 public:
@@ -207,15 +220,6 @@ private:
     Ident ident;
     FuncFParams funcFParams;
     Block block;
-
-};
-
-// Block
-class Block : public BaseASTNode {
-public:
-    void dump() const override;
-
-public:
 
 };
 
@@ -436,7 +440,14 @@ private:
 
 // Exp -> AddExp
 class Exp : public BaseASTNode {
+public:
+    explicit Exp() = default;
+    explicit Exp(const AddExp& addExp);
 
+    void dump() const override;
+
+private:
+    AddExp addExp;
 };
 
 

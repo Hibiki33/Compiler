@@ -146,9 +146,17 @@ void MainFuncDef::dump() const {
 /*
  * class Block
  */
+Block::Block(const std::vector<BlockItem> &blockItems) {
+    this->blockItems = blockItems;
+}
+
 void Block::dump() const {
     std::cout << "Block { ";
-
+    std::cout << "{";
+    for (const auto & blockItem : blockItems) {
+        blockItem.dump();
+    }
+    std::cout << "}";
     std::cout << " }";
 }
 
@@ -439,5 +447,18 @@ void FuncFParam::dump() const {
             std::cout << "]";
         }
     }
+    std::cout << " }";
+}
+
+/*
+ * class Exp
+ */
+Exp::Exp(const AddExp &addExp) {
+    this->addExp = addExp;
+}
+
+void Exp::dump() const {
+    std::cout << "Exp { ";
+    addExp.dump();
     std::cout << " }";
 }
