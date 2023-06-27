@@ -7,6 +7,7 @@
 
 #pragma once
 #include <string>
+#include <iostream>
 
 // #define Token std::tuple<std::string, std::string, int>
 //
@@ -131,5 +132,7 @@ private:
     int tokenLineNumber{};
 
 };
+
+std::ostream& operator<<(const std::ostream& os, Token& token);
 
 #endif //COMPILER_TOKEN_H
