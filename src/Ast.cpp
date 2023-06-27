@@ -5,15 +5,13 @@
 #include "Ast.h"
 
 /*
- * Decl
+ * class Decl
  */
 Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
     this->constant = constant;
     this->bType = bType;
     this->defs = defs;
 }
-
-Decl::~Decl() = default;
 
 bool Decl::isConstant() const {
     return constant;
@@ -26,5 +24,71 @@ Token Decl::getBType() {
 std::vector<Def> Decl::getDefs() {
     return defs;
 }
+
+void Decl::dump() const {
+
+}
+
+/*
+ * Def
+ */
+
+/*
+ * class MainFuncDef
+ */
+MainFuncDef::MainFuncDef(const Block& block) {
+    this->block = block;
+}
+
+void MainFuncDef::dump() const {
+    std::cout << "MainFuncDef { ";
+    block.dump();
+    std::cout << " }";
+}
+
+/*
+ * class Block
+ */
+void Block::dump() const {
+    std::cout << "Block { ";
+
+    std::cout << " }";
+}
+
+/*
+ * class CompUnit
+ */
+CompUnit::CompUnit(const std::vector<Decl> &decls,
+                   const std::vector<FuncDef> &funcDefs,
+                   const MainFuncDef &mainFuncDef) {
+    this->decls = decls;
+    this->funcDefs = funcDefs;
+    this->mainFuncDef = mainFuncDef;
+}
+
+/*
+ * class BlockItem
+ */
+BlockItem::BlockItem(const Decl &decl) {
+    this->decl = decl;
+    type = DECL;
+}
+
+BlockItem::BlockItem(const Stmt &stmt) {
+    this->stmt = stmt;
+    type = STMT;
+}
+
+void BlockItem::dump() const {
+    std::cout << "BlockItem { ";
+    if (type == DECL) {
+        decl.dump();
+    } else {
+        stmt.dump();
+    }
+    std::cout << " }";
+}
+
+
 
 
