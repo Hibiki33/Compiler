@@ -13,6 +13,9 @@
 
 class BaseASTNode;
 class BType;
+class FuncType;
+
+class IntConst;
 
 class CompUnit;
 class Decl;
@@ -67,6 +70,30 @@ private:
     Type type;
 
 };
+
+// IntConst
+class IntConst : public BaseASTNode {
+public:
+    explicit IntConst() = default;
+    explicit IntConst(Token token);
+
+    void dump() const override;
+
+private:
+    Token token;
+
+};
+
+// Number -> IntConst
+class Number : public BaseASTNode {
+public:
+
+
+private:
+
+
+};
+
 
 // Def -> Ident {'[' Exp ']'} ['=' Init]
 class Def {

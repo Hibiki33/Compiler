@@ -37,6 +37,19 @@ void FuncType::dump() const {
 }
 
 /*
+ * class IntConst
+ */
+IntConst::IntConst(Token token) {
+    this->token = token;
+}
+
+void IntConst::dump() const {
+    std::cout << "FuncType { ";
+    std::cout << token;
+    std::cout << " }";
+}
+
+/*
  * class Decl
  */
 Decl::Decl(bool constant, const Token& bType, const std::vector<Def> &defs) {
