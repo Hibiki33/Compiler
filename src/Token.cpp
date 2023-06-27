@@ -25,7 +25,7 @@ Token::Token() = default;
 
 Token::~Token() = default;
 
-std::ostream& operator<<(const std::ostream& os, Token& token) {
+std::ostream& operator<<(const std::ostream& os, Token token) {
     std::cout << token.getTokenSymbol() << ": ";
     std::cout << token.getTokenString();
     return const_cast<std::ostream &>(os);

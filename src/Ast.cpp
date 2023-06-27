@@ -39,7 +39,7 @@ void FuncType::dump() const {
 /*
  * class IntConst
  */
-IntConst::IntConst(Token token) {
+IntConst::IntConst(const Token& token) {
     this->token = token;
 }
 

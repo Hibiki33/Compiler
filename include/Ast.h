@@ -75,7 +75,7 @@ private:
 class IntConst : public BaseASTNode {
 public:
     explicit IntConst() = default;
-    explicit IntConst(Token token);
+    explicit IntConst(const Token& token);
 
     void dump() const override;
 

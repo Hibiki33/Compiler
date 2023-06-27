@@ -133,6 +133,6 @@ private:
 
 };
 
-std::ostream& operator<<(const std::ostream& os, Token& token);
+std::ostream& operator<<(const std::ostream& os, Token token);
 
 #endif //COMPILER_TOKEN_H
