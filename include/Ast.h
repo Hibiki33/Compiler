@@ -16,6 +16,8 @@ class BType;
 class FuncType;
 
 class IntConst;
+class Ident;
+class FormatString;
 
 class CompUnit;
 class Decl;
@@ -76,6 +78,32 @@ class IntConst : public BaseASTNode {
 public:
     explicit IntConst() = default;
     explicit IntConst(const Token& token);
+
+    void dump() const override;
+
+private:
+    Token token;
+
+};
+
+// Ident
+class Ident : public BaseASTNode {
+public:
+    explicit Ident() = default;
+    explicit Ident(const Token& token);
+
+    void dump() const override;
+
+private:
+    Token token;
+
+};
+
+// FormatString
+class FormatString : public BaseASTNode {
+public:
+    explicit FormatString() = default;
+    explicit FormatString(const Token& token);
 
     void dump() const override;
 

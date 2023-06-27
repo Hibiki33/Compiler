@@ -44,7 +44,34 @@ IntConst::IntConst(const Token& token) {
 }
 
 void IntConst::dump() const {
-    std::cout << "FuncType { ";
+    std::cout << "IntConst { ";
+    std::cout << token;
+    std::cout << " }";
+}
+
+/*
+ * class Ident
+ */
+Ident::Ident(const Token &token) {
+    this->token = token;
+}
+
+void Ident::dump() const {
+    std::cout << "Ident { ";
+    std::cout << token;
+    std::cout << " }";
+}
+
+/*
+ * class FormatString
+ */
+
+FormatString::FormatString(const Token &token) {
+    this->token = token;
+}
+
+void FormatString::dump() const {
+    std::cout << "FormatString { ";
     std::cout << token;
     std::cout << " }";
 }
@@ -133,5 +160,6 @@ void BlockItem::dump() const {
     }
     std::cout << " }";
 }
+
 
 
