@@ -71,7 +71,7 @@ public:
     void dump() const override;
 
 private:
-    Type type;
+    Type type{};
 
 };
 
@@ -89,7 +89,7 @@ public:
     void dump() const override;
 
 private:
-    Type type;
+    Type type{};
 
 };
 
@@ -450,10 +450,57 @@ private:
     AddExp addExp;
 };
 
+// FuncRParams -> Exp { ',' Exp }
+class FuncRParams : public BaseASTNode {
+public:
+    explicit FuncRParams() = default;
+    explicit FuncRParams(const std::vector<Exp>& exps);
 
+    void dump() const override;
 
+private:
+    std::vector<Exp> exps;
 
+};
 
+// LVal -> Ident {'[' Exp ']'}
+class LVal : public BaseASTNode {
+public:
+    explicit LVal() = default;
+    explicit LVal(const Ident& ident,
+                  const std::vector<Exp>& exps);
+
+    void dump() const override;
+
+private:
+    Ident ident;
+    std::vector<Exp> exps;
+
+};
+
+// PrimaryExp -> '(' Exp ')' | LVal | Number
+class PrimaryExp : public BaseASTNode {
+public:
+    enum Type {
+        EXP,
+        LVAL,
+        NUM,
+    };
+
+    explicit PrimaryExp() = default;
+    explicit PrimaryExp(const Exp& exp);
+    explicit PrimaryExp(const LVal& lVal);
+    explicit PrimaryExp(const Number& number);
+
+    void dump() const override;
+
+private:
+    Exp exp;
+    LVal lVal;
+    Number number;
+
+    Type type{};
+};
 
 
 class Ast {

@@ -420,15 +420,15 @@ void FuncFParams::dump() const {
 /*
  * class FuncFParam
  */
-FuncFParam::FuncFParam(const BType &bType,
-                       const Ident &ident) {
+FuncFParam::FuncFParam(const BType& bType,
+                       const Ident& ident) {
     this->bType = bType;
     this->ident = ident;
     isArray = false;
 }
 
-FuncFParam::FuncFParam(const BType &bType,
-                       const Ident &ident,
+FuncFParam::FuncFParam(const BType& bType,
+                       const Ident& ident,
                        const std::vector<ConstExp>& constExps) {
     this->bType = bType;
     this->ident = ident;
@@ -453,12 +453,88 @@ void FuncFParam::dump() const {
 /*
  * class Exp
  */
-Exp::Exp(const AddExp &addExp) {
+Exp::Exp(const AddExp& addExp) {
     this->addExp = addExp;
 }
 
 void Exp::dump() const {
     std::cout << "Exp { ";
     addExp.dump();
+    std::cout << " }";
+}
+
+/*
+ * class FuncRParams
+ */
+FuncRParams::FuncRParams(const std::vector<Exp>& exps) {
+    this->exps = exps;
+}
+
+void FuncRParams::dump() const {
+    std::cout << "FuncRParams { ";
+    for (auto iter = exps.begin(); iter != exps.end(); iter++) {
+        if (std::next(iter, 1) != exps.end()) {
+            iter->dump();
+            std::cout << ", ";
+        } else {
+            iter->dump();
+        }
+    }
+    std::cout << " }";
+}
+
+/*
+ * class LVal
+ */
+LVal::LVal(const Ident &ident,
+           const std::vector<Exp> &exps) {
+    this->ident = ident;
+    this->exps = exps;
+}
+
+void LVal::dump() const {
+    std::cout << "LVal { ";
+    ident.dump();
+    for (const auto & exp : exps) {
+        std::cout << "[";
+        exp.dump();
+        std::cout << "]";
+    }
+    std::cout << " }";
+}
+
+/*
+ * class PrimaryExp
+ */
+PrimaryExp::PrimaryExp(const Exp& exp) {
+    this->exp = exp;
+    type = EXP;
+}
+
+PrimaryExp::PrimaryExp(const LVal& lVal) {
+    this->lVal = lVal;
+    type = LVAL;
+}
+
+PrimaryExp::PrimaryExp(const Number& number) {
+    this->number = number;
+    type = NUM;
+}
+
+void PrimaryExp::dump() const {
+    std::cout << "PrimaryExp { ";
+    switch (type) {
+        case EXP:
+            std::cout << "(";
+            exp.dump();
+            std::cout << ")";
+            break;
+        case LVAL:
+            lVal.dump();
+            break;
+        case NUM:
+            number.dump();
+            break;
+    }
     std::cout << " }";
 }
