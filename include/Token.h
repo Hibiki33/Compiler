@@ -122,8 +122,8 @@ public:
 
     ~Token();
 
-    std::string getTokenSymbol();
-    std::string getTokenString();
+    std::string getTokenSymbol() const;
+    std::string getTokenString() const;
     int getTokenLineNumber() const;
 
 private:

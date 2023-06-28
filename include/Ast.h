@@ -55,7 +55,9 @@ class BaseASTNode {
 public:
     virtual  ~BaseASTNode() = default;
 
-    virtual void dump() const = 0;
+    virtual std::string dump() const = 0;
+
+    std::ostream& operator<<(std::ostream& os) const;
 };
 
 // BType -> 'int'
@@ -68,7 +70,7 @@ public:
     explicit BType() = default;
     explicit BType(Type type);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Type type{};
@@ -86,7 +88,7 @@ public:
     explicit FuncType() = default;
     explicit FuncType(Type type);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Type type{};
@@ -99,7 +101,7 @@ public:
     explicit IntConst() = default;
     explicit IntConst(const Token& token);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Token token;
@@ -112,7 +114,7 @@ public:
     explicit Ident() = default;
     explicit Ident(const Token& token);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Token token;
@@ -125,7 +127,7 @@ public:
     explicit FormatString() = default;
     explicit FormatString(const Token& token);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Token token;
@@ -138,7 +140,7 @@ public:
     explicit UnaryOp() = default;
     explicit UnaryOp(const Token& token);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Token token;
@@ -151,7 +153,7 @@ public:
     explicit Number() = default;
     explicit Number(const IntConst& intConst);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     IntConst intConst;
@@ -168,7 +170,7 @@ public:
                         const Ident& ident,
                         const std::vector<ConstExp>& constExps);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     BType bType;
@@ -184,7 +186,7 @@ public:
     explicit FuncFParams() = default;
     explicit FuncFParams(const std::vector<FuncFParam>& funcFParams);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     std::vector<FuncFParam> funcFParams;
@@ -197,7 +199,7 @@ public:
     explicit Block() = default;
     explicit Block(const std::vector<BlockItem>& blockItems);
 
-    void dump() const override;
+    std::string dump() const override;
 
 public:
     std::vector<BlockItem> blockItems;
@@ -213,7 +215,7 @@ public:
                      const FuncFParams& funcFParams,
                      const Block& block);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     FuncType funcType;
@@ -229,7 +231,7 @@ public:
     explicit MainFuncDef() = default;
     explicit MainFuncDef(const Block& block);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Block block;
@@ -241,7 +243,7 @@ public:
     explicit ConstExp() = default;
     explicit ConstExp(const AddExp& addExp);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     AddExp addExp;
@@ -261,7 +263,7 @@ public:
     explicit ConstInitVal(const ConstExp& constExp);
     explicit ConstInitVal(const std::vector<ConstInitVal>& constInitVals);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     ConstExp constExp;
@@ -282,7 +284,7 @@ public:
     explicit InitVal(const Exp& exp);
     explicit InitVal(const std::vector<InitVal>& initVals);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     ConstExp exp;
@@ -302,7 +304,7 @@ public:
                     const std::vector<ConstExp>& constExps,
                     const InitVal& initVal);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Ident ident;
@@ -321,7 +323,7 @@ public:
                       const std::vector<ConstExp>& constExps,
                       const ConstInitVal& constInitVal);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Ident ident;
@@ -337,7 +339,7 @@ public:
     explicit ConstDecl(const BType& bType,
                        const std::vector<ConstDef>& constDefs);
 
-    void dump() const override;
+    std::string dump() const override;
 
 
 private:
@@ -353,7 +355,7 @@ public:
     explicit VarDecl(const BType& bType,
                      const std::vector<VarDef>& varDefs);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     BType bType;
@@ -373,7 +375,7 @@ public:
     explicit Decl(const ConstDecl& constDecl);
     explicit Decl(const VarDecl& varDecl);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     ConstDecl constDecl;
@@ -394,7 +396,7 @@ private:
 class Stmt : public BaseASTNode {
 public:
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
 
@@ -412,13 +414,13 @@ public:
     explicit BlockItem(const Decl& decl);
     explicit BlockItem(const Stmt& stmt);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Decl decl;
     Stmt stmt;
 
-    Type type;
+    Type type{};
 };
 
 // CompUnit ->  {Decl} {FuncDef} MainFuncDef
@@ -444,7 +446,7 @@ public:
     explicit Exp() = default;
     explicit Exp(const AddExp& addExp);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     AddExp addExp;
@@ -456,7 +458,7 @@ public:
     explicit FuncRParams() = default;
     explicit FuncRParams(const std::vector<Exp>& exps);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     std::vector<Exp> exps;
@@ -470,7 +472,7 @@ public:
     explicit LVal(const Ident& ident,
                   const std::vector<Exp>& exps);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Ident ident;
@@ -492,7 +494,7 @@ public:
     explicit PrimaryExp(const LVal& lVal);
     explicit PrimaryExp(const Number& number);
 
-    void dump() const override;
+    std::string dump() const override;
 
 private:
     Exp exp;

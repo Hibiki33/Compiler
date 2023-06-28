@@ -5,18 +5,24 @@
 #include "Ast.h"
 
 /*
+ * class BaseASTNode
+ */
+std::ostream& BaseASTNode::operator<<(std::ostream& os) const {
+    os << dump();
+    return os;
+}
+
+/*
  * class BType
  */
 BType::BType(BType::Type type) {
     this->type = type;
 }
 
-void BType::dump() const {
-    std::cout << "BType { ";
-    if (type == INT) {
-        std::cout << "int";
-    }
-    std::cout << " }";
+std::string BType::dump() const {
+    return "BType { " +
+    std::string(type == INT ? "int" : "") +
+    " }";
 }
 
 /*
@@ -26,14 +32,11 @@ FuncType::FuncType(FuncType::Type type) {
     this->type = type;
 }
 
-void FuncType::dump() const {
-    std::cout << "FuncType { ";
-    if (type == VOID) {
-        std::cout << "void";
-    } else if (type == INT) {
-        std::cout << "int";
-    }
-    std::cout << " }";
+std::string FuncType::dump() const {
+    return "FuncType { " +
+    std::string(type == VOID ? "void" :
+                type == INT ? "int" : "") +
+    " }";
 }
 
 /*
@@ -43,10 +46,11 @@ IntConst::IntConst(const Token& token) {
     this->token = token;
 }
 
-void IntConst::dump() const {
-    std::cout << "IntConst { ";
-    std::cout << token;
-    std::cout << " }";
+std::string IntConst::dump() const {
+    return "IntConst { " +
+    token.getTokenSymbol() + " : " +
+    token.getTokenString() +
+    " }";
 }
 
 /*
@@ -56,10 +60,11 @@ Ident::Ident(const Token &token) {
     this->token = token;
 }
 
-void Ident::dump() const {
-    std::cout << "Ident { ";
-    std::cout << token;
-    std::cout << " }";
+std::string Ident::dump() const {
+    return "Ident { " +
+    token.getTokenSymbol() + " : " +
+    token.getTokenString() +
+    " }";
 }
 
 /*
@@ -70,10 +75,11 @@ FormatString::FormatString(const Token &token) {
     this->token = token;
 }
 
-void FormatString::dump() const {
-    std::cout << "FormatString { ";
-    std::cout << token;
-    std::cout << " }";
+std::string FormatString::dump() const {
+    return "FormatString { " +
+    token.getTokenSymbol() + " : " +
+    token.getTokenString() +
+    " }";
 }
 
 /*
@@ -83,10 +89,11 @@ UnaryOp::UnaryOp(const Token &token) {
     this->token = token;
 }
 
-void UnaryOp::dump() const {
-    std::cout << "UnaryOp { ";
-    std::cout << token;
-    std::cout << " }";
+std::string UnaryOp::dump() const {
+    return "UnaryOp { " +
+    token.getTokenSymbol() + " : " +
+    token.getTokenString() +
+    " }";
 }
 
 /*
@@ -96,10 +103,10 @@ Number::Number(const IntConst &intConst) {
     this->intConst = intConst;
 }
 
-void Number::dump() const {
-    std::cout << "UnaryOp { ";
-    intConst.dump();
-    std::cout << " }";
+std::string Number::dump() const {
+    return "UnaryOp { " +
+    intConst.dump() +
+    " }";
 }
 
 /*
@@ -115,14 +122,11 @@ Decl::Decl(const VarDecl &varDecl) {
     type = VARDECL;
 }
 
-void Decl::dump() const {
-    std::cout << "Decl { ";
-    if (type == CONSTDECL) {
-        constDecl.dump();
-    } else {
-        varDecl.dump();
-    }
-    std::cout << " }";
+std::string Decl::dump() const {
+    return "Decl { " +
+    std::string(type == CONSTDECL ? constDecl.dump() :
+                type == VARDECL ? varDecl.dump() : "") +
+    " }";
 }
 
 /*
@@ -136,11 +140,11 @@ MainFuncDef::MainFuncDef(const Block& block) {
     this->block = block;
 }
 
-void MainFuncDef::dump() const {
-    std::cout << "MainFuncDef { ";
-    std::cout << "int main()";
-    block.dump();
-    std::cout << " }";
+std::string MainFuncDef::dump() const {
+    return "MainFuncDef { " +
+    std::string("int main() ") +
+    block.dump() +
+    " }";
 }
 
 /*
@@ -150,14 +154,14 @@ Block::Block(const std::vector<BlockItem> &blockItems) {
     this->blockItems = blockItems;
 }
 
-void Block::dump() const {
-    std::cout << "Block { ";
-    std::cout << "{";
+std::string Block::dump() const {
+    std::string res =  "Block { " +
+    std::string("{");
     for (const auto & blockItem : blockItems) {
-        blockItem.dump();
+         res += blockItem.dump();
     }
-    std::cout << "}";
-    std::cout << " }";
+    return res + "}" +
+    " }";
 }
 
 /*
@@ -184,14 +188,11 @@ BlockItem::BlockItem(const Stmt &stmt) {
     type = STMT;
 }
 
-void BlockItem::dump() const {
-    std::cout << "BlockItem { ";
-    if (type == DECL) {
-        decl.dump();
-    } else {
-        stmt.dump();
-    }
-    std::cout << " }";
+std::string BlockItem::dump() const {
+    return "BlockItem { " +
+    std::string(type == DECL ? decl.dump() :
+                type == STMT ? stmt.dump() : "") +
+    " }";
 }
 
 /*
@@ -203,20 +204,19 @@ ConstDecl::ConstDecl(const BType &bType,
     this->constDefs = constDefs;
 }
 
-void ConstDecl::dump() const {
-    std::cout << "ConstDecl { ";
-    std::cout << "const";
+std::string ConstDecl::dump() const {
+    std::string res = "ConstDecl { " +
+    std::string("const") +
     bType.dump();
     for (auto iter = constDefs.begin(); iter != constDefs.end(); iter++) {
         if (std::next(iter, 1) != constDefs.end()) {
-            iter->dump();
-            std::cout << ", ";
+            res += iter->dump() + ", ";
         } else {
-            iter->dump();
+            res += iter->dump();
         }
     }
-    std::cout << ";";
-    std::cout << " }";
+    return res + ";" +
+    " }";
 }
 
 /*
@@ -230,17 +230,15 @@ ConstDef::ConstDef(const Ident& ident,
     this->constInitVal = constInitVal;
 }
 
-void ConstDef::dump() const {
-    std::cout << "ConstDef { ";
+std::string ConstDef::dump() const {
+    std::string res = "ConstDef { " +
     ident.dump();
     for (const auto & constExp : constExps) {
-        std::cout << "[";
-        constExp.dump();
-        std::cout << "]";
+        res +=  "[" + constExp.dump() + "]";
     }
-    std::cout << "=";
-    constInitVal.dump();
-    std::cout << " }";
+    return res + " = " +
+    constInitVal.dump() +
+    " }";
 }
 
 /*
@@ -256,23 +254,22 @@ ConstInitVal::ConstInitVal(const std::vector<ConstInitVal>& constInitVals) {
     type = ARR;
 }
 
-void ConstInitVal::dump() const {
-    std::cout << "ConstInitVal { ";
+std::string ConstInitVal::dump() const {
+    std::string res = "ConstInitVal { ";
     if (type == EXP) {
-        constExp.dump();
+        res += constExp.dump();
     } else {
-        std::cout << "{";
+        res += "{";
         for (auto iter = constInitVals.begin(); iter != constInitVals.end(); iter++) {
             if (std::next(iter, 1) != constInitVals.end()) {
-                iter->dump();
-                std::cout << ", ";
+                res += iter->dump() + ", ";
             } else {
-                iter->dump();
+                res += iter->dump();
             }
         }
-        std::cout << "}";
+        res += "}";
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -288,23 +285,22 @@ InitVal::InitVal(const std::vector<InitVal>& initVals) {
     type = ARR;
 }
 
-void InitVal::dump() const {
-    std::cout << "InitVal { ";
+std::string InitVal::dump() const {
+    std::string res = "InitVal { ";
     if (type == EXP) {
-        exp.dump();
+        res += exp.dump();
     } else {
-        std::cout << "{";
+        res += "{";
         for (auto iter = initVals.begin(); iter != initVals.end(); iter++) {
             if (std::next(iter, 1) != initVals.end()) {
-                iter->dump();
-                std::cout << ", ";
+                res += iter->dump() + ", ";
             } else {
-                iter->dump();
+                res += iter->dump();
             }
         }
-        std::cout << "}";
+        res += "}";
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -314,10 +310,10 @@ ConstExp::ConstExp(const AddExp &addExp) {
     this->addExp = addExp;
 }
 
-void ConstExp::dump() const {
-    std::cout << "ConstExp { ";
-    addExp.dump();
-    std::cout << " }";
+std::string ConstExp::dump() const {
+    return "ConstExp { " +
+    addExp.dump()
+    " }";
 }
 
 /*
@@ -329,18 +325,17 @@ VarDecl::VarDecl(const BType &bType,
     this->varDefs = varDefs;
 }
 
-void VarDecl::dump() const {
-    std::cout << "VarDecl { ";
+std::string VarDecl::dump() const {
+    std::string res = "VarDecl { " +
     bType.dump();
     for (auto iter = varDefs.begin(); iter != varDefs.end(); iter++) {
         if (std::next(iter, 1) != varDefs.end()) {
-            iter->dump();
-            std::cout << ", ";
+            res += iter->dump() + ", ";
         } else {
-            iter->dump();
+            res += iter->dump();
         }
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -362,15 +357,16 @@ VarDef::VarDef(const Ident& ident,
     isInit = true;
 }
 
-void VarDef::dump() const {
-    std::cout << "VarDef { ";
+std::string VarDef::dump() const {
+    std::string res = "VarDef { " +
     ident.dump();
     for (const auto & constExp : constExps) {
-        std::cout << "[";
-        constExp.dump();
-        std::cout << "]";
+        res += "[" + constExp.dump() + "]";
     }
-    std::cout << " }";
+    if (isInit) {
+        res += initVal.dump();
+    }
+    return res + " }";
 }
 
 /*
@@ -386,15 +382,13 @@ FuncDef::FuncDef(const FuncType& funcType,
     this->block = block;
 }
 
-void FuncDef::dump() const {
-    std::cout << "FuncDef { ";
-    funcType.dump();
-    ident.dump();
-    std::cout << "(";
-    funcFParams.dump();
-    std::cout << ")";
-    block.dump();
-    std::cout << " }";
+std::string FuncDef::dump() const {
+    return "FuncDef { " +
+    funcType.dump() +
+    ident.dump() +
+    "(" + funcFParams.dump() + ")" +
+    block.dump() +
+    " }";
 }
 
 /*
@@ -404,17 +398,16 @@ FuncFParams::FuncFParams(const std::vector<FuncFParam>& funcFParams) {
     this->funcFParams = funcFParams;
 }
 
-void FuncFParams::dump() const {
-    std::cout << "FuncFParams { ";
+std::string FuncFParams::dump() const {
+    std::string res = "FuncFParams { ";
     for (auto iter = funcFParams.begin(); iter != funcFParams.end(); iter++) {
         if (std::next(iter, 1) != funcFParams.end()) {
-            iter->dump();
-            std::cout << ", ";
+            res += iter->dump() + ", ";
         } else {
-            iter->dump();
+            res += iter->dump();
         }
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -436,18 +429,16 @@ FuncFParam::FuncFParam(const BType& bType,
     isArray = true;
 }
 
-void FuncFParam::dump() const {
-    std::cout << "FuncFParam { ";
-    bType.dump();
+std::string FuncFParam::dump() const {
+    std::string res = "FuncFParam { " +
+    bType.dump() +
     ident.dump();
     if (isArray) {
         for (const auto & constExp : constExps) {
-            std::cout << "[";
-            constExp.dump();
-            std::cout << "]";
+            res += "[" + constExp.dump() + "]";
         }
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -457,10 +448,10 @@ Exp::Exp(const AddExp& addExp) {
     this->addExp = addExp;
 }
 
-void Exp::dump() const {
-    std::cout << "Exp { ";
-    addExp.dump();
-    std::cout << " }";
+std::string Exp::dump() const {
+    return "Exp { " +
+    addExp.dump()
+    " }";
 }
 
 /*
@@ -470,17 +461,16 @@ FuncRParams::FuncRParams(const std::vector<Exp>& exps) {
     this->exps = exps;
 }
 
-void FuncRParams::dump() const {
-    std::cout << "FuncRParams { ";
+std::string FuncRParams::dump() const {
+    std::string res = "FuncRParams { ";
     for (auto iter = exps.begin(); iter != exps.end(); iter++) {
         if (std::next(iter, 1) != exps.end()) {
-            iter->dump();
-            std::cout << ", ";
+            res += iter->dump() + ", ";
         } else {
-            iter->dump();
+            res += iter->dump();
         }
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -492,15 +482,13 @@ LVal::LVal(const Ident &ident,
     this->exps = exps;
 }
 
-void LVal::dump() const {
-    std::cout << "LVal { ";
+std::string LVal::dump() const {
+    std::string res = "LVal { " +
     ident.dump();
     for (const auto & exp : exps) {
-        std::cout << "[";
-        exp.dump();
-        std::cout << "]";
+        res += "[" + exp.dump() + "]";
     }
-    std::cout << " }";
+    return res + " }";
 }
 
 /*
@@ -521,20 +509,20 @@ PrimaryExp::PrimaryExp(const Number& number) {
     type = NUM;
 }
 
-void PrimaryExp::dump() const {
-    std::cout << "PrimaryExp { ";
+std::string PrimaryExp::dump() const {
+    std::string res = "PrimaryExp { ";
     switch (type) {
         case EXP:
-            std::cout << "(";
-            exp.dump();
-            std::cout << ")";
+            res += "(" + exp.dump() + ")";
             break;
         case LVAL:
-            lVal.dump();
+            res += lVal.dump();
             break;
         case NUM:
-            number.dump();
+            res += number.dump();
             break;
     }
-    std::cout << " }";
+    return res + " }";
 }
+
+

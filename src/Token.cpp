@@ -9,11 +9,11 @@ Token::Token(const std::string& sym, const std::string& str, int lin) {
     tokenLineNumber = lin;
 }
 
-std::string Token::getTokenSymbol() {
+std::string Token::getTokenSymbol() const {
     return tokenSymbol;
 }
 
-std::string Token::getTokenString() {
+std::string Token::getTokenString() const {
     return tokenString;
 }
 
