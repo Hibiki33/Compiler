@@ -579,4 +579,20 @@ std::string UnaryExp::dump() const {
     return res + " }";
 }
 
+/*
+ * class MulExp
+ */
+MulExp::MulExp(const std::vector<UnaryExp>& unaryExps,
+               const std::vector<Token>& ops) {
+    this->unaryExps = unaryExps;
+    this->ops = ops;
+}
 
+std::string MulExp::dump() const {
+    std::string res = "MulExp { ";
+    for (auto i = 0; i < unaryExps.size() - 1; i++) {
+        res += unaryExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + unaryExps[unaryExps.size() - 1].dump();
+}

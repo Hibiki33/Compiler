@@ -505,6 +505,7 @@ private:
     Number number;
 
     Type type{};
+
 };
 
 // UnaryExp -> PrimaryExp
@@ -539,13 +540,21 @@ private:
     UnaryExp unaryExp;
 
     Type type{};
+
 };
 
 // MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
 class MulExp : public BaseASTNode {
 public:
+    explicit MulExp() = default;
+    explicit MulExp(const std::vector<UnaryExp>& unaryExps,
+                    const std::vector<Token>& ops);
+
+    std::string dump() const override;
 
 private:
+    std::vector<UnaryExp> unaryExps;
+    std::vector<Token> ops;
 
 };
 
