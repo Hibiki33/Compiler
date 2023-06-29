@@ -242,100 +242,13 @@ private:
     Block block;
 };
 
-// ConstExp → AddExp
-class ConstExp : public BaseASTNode {
-public:
-    explicit ConstExp() = default;
-    explicit ConstExp(const AddExp& addExp);
 
-    std::string dump() const override;
 
-private:
-    AddExp addExp;
 
-};
 
-// ConstInitVal -> ConstExp
-//              | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
-class ConstInitVal : public BaseASTNode {
-public:
-    enum Type {
-        EXP,
-        ARR,
-    };
 
-    explicit ConstInitVal() = default;
-    explicit ConstInitVal(const ConstExp& constExp);
-    explicit ConstInitVal(const std::vector<ConstInitVal>& constInitVals);
 
-    std::string dump() const override;
 
-private:
-    ConstExp constExp;
-    std::vector<ConstInitVal> constInitVals;
-
-    Type type{};
-};
-
-// InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'
-class InitVal : public BaseASTNode {
-public:
-    enum Type {
-        EXP,
-        ARR,
-    };
-
-    explicit InitVal() = default;
-    explicit InitVal(const Exp& exp);
-    explicit InitVal(const std::vector<InitVal>& initVals);
-
-    std::string dump() const override;
-
-private:
-    ConstExp exp;
-    std::vector<InitVal> initVals;
-
-    Type type{};
-};
-
-// VarDef -> Ident { '[' ConstExp ']' }
-//         | Ident { '[' ConstExp ']' } '=' InitVal
-class VarDef : public BaseASTNode {
-public:
-    explicit VarDef() = default;
-    explicit VarDef(const Ident& ident,
-                    const std::vector<ConstExp>& constExps);
-    explicit VarDef(const Ident& ident,
-                    const std::vector<ConstExp>& constExps,
-                    const InitVal& initVal);
-
-    std::string dump() const override;
-
-private:
-    Ident ident;
-    std::vector<ConstExp> constExps;
-    InitVal initVal;
-
-    bool isInit{};
-
-};
-
-//  ConstDef → Ident { '[' ConstExp ']' } '=' ConstInitVal
-class ConstDef : public BaseASTNode {
-public:
-    explicit ConstDef() = default;
-    explicit ConstDef(const Ident& ident,
-                      const std::vector<ConstExp>& constExps,
-                      const ConstInitVal& constInitVal);
-
-    std::string dump() const override;
-
-private:
-    Ident ident;
-    std::vector<ConstExp> constExps;
-    ConstInitVal constInitVal;
-
-};
 
 // ConstDecl -> 'const' BType ConstDef { ',' ConstDef } ';'
 class ConstDecl : public BaseASTNode {
@@ -443,18 +356,6 @@ private:
 
 };
 
-// Exp -> AddExp
-class Exp : public BaseASTNode {
-public:
-    explicit Exp() = default;
-    explicit Exp(const AddExp& addExp);
-
-    std::string dump() const override;
-
-private:
-    AddExp addExp;
-};
-
 // FuncRParams -> Exp { ',' Exp }
 class FuncRParams : public BaseASTNode {
 public:
@@ -483,6 +384,107 @@ private:
 
 };
 
+// MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
+class MulExp : public BaseASTNode {
+public:
+    explicit MulExp() = default;
+    explicit MulExp(const std::vector<UnaryExp>& unaryExps,
+                    const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<UnaryExp> unaryExps;
+    std::vector<Token> ops;
+
+};
+
+// AddExp -> MulExp { ('+' | '-') MulExp }
+class AddExp : public BaseASTNode {
+public:
+    explicit AddExp() = default;
+    explicit AddExp(const std::vector<MulExp>& mulExps,
+                    const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<MulExp> mulExps;
+    std::vector<Token> ops;
+
+};
+
+// RelExp -> AddExp { ('<' | '>' | '<=' | '>=') AddExp }
+class RelExp : public BaseASTNode {
+public:
+    explicit RelExp() = default;
+    explicit RelExp(const std::vector<AddExp>& addExps,
+                    const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<AddExp> addExps;
+    std::vector<Token> ops;
+
+};
+
+// EqExp -> RelExp { ('==' | '!=') RelExp }
+class EqExp : public BaseASTNode {
+public:
+    explicit EqExp() = default;
+    explicit EqExp(const std::vector<RelExp>& relExps,
+                   const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<RelExp> relExps;
+    std::vector<Token> ops;
+
+};
+
+// LAndExp -> EqExp { '&& EqExp }
+class LAndExp : public BaseASTNode {
+public:
+    explicit LAndExp() = default;
+    explicit LAndExp(const std::vector<EqExp>& eqExps,
+                     const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<EqExp> eqExps;
+    std::vector<Token> ops;
+
+};
+
+
+// ConstExp → AddExp
+class ConstExp : public BaseASTNode {
+public:
+    explicit ConstExp() = default;
+    explicit ConstExp(const AddExp& addExp);
+
+    std::string dump() const override;
+
+private:
+    AddExp addExp;
+
+};
+
+// Exp -> AddExp
+class Exp : public BaseASTNode {
+public:
+    explicit Exp() = default;
+    explicit Exp(const AddExp& addExp);
+
+    std::string dump() const override;
+
+private:
+    AddExp addExp;
+};
+
 // PrimaryExp -> '(' Exp ')' | LVal | Number
 class PrimaryExp : public BaseASTNode {
 public:
@@ -508,53 +510,85 @@ private:
 
 };
 
-// UnaryExp -> PrimaryExp
-//           | Ident '(' [FuncRParams] ')'
-//           | UnaryOp UnaryExp
-class UnaryExp : public BaseASTNode {
+// InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'
+class InitVal : public BaseASTNode {
 public:
     enum Type {
-        PRI,
-        IDE,
-        UNA,
+        EXP,
+        ARR,
     };
 
-    explicit UnaryExp() = default;
-    explicit UnaryExp(const PrimaryExp& primaryExp);
-    explicit UnaryExp(const Ident& ident);
-    explicit UnaryExp(const Ident& ident,
-                      const FuncRParams& funcRParams);
-    explicit UnaryExp(const UnaryOp& unaryOp,
-                      const UnaryExp& unaryExp);
+    explicit InitVal() = default;
+    explicit InitVal(const Exp& exp);
+    explicit InitVal(const std::vector<InitVal>& initVals);
 
     std::string dump() const override;
 
 private:
-    PrimaryExp primaryExp;
-
-    Ident ident;
-    FuncRParams funcRParams;
-    bool hasParams{};
-
-    UnaryOp unaryOp;
-    UnaryExp unaryExp;
+    Exp exp;
+    std::vector<InitVal> initVals;
 
     Type type{};
+};
+
+// VarDef -> Ident { '[' ConstExp ']' }
+//         | Ident { '[' ConstExp ']' } '=' InitVal
+class VarDef : public BaseASTNode {
+public:
+    explicit VarDef() = default;
+    explicit VarDef(const Ident& ident,
+                    const std::vector<ConstExp>& constExps);
+    explicit VarDef(const Ident& ident,
+                    const std::vector<ConstExp>& constExps,
+                    const InitVal& initVal);
+
+    std::string dump() const override;
+
+private:
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    InitVal initVal;
+
+    bool isInit{};
 
 };
 
-// MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
-class MulExp : public BaseASTNode {
+// ConstInitVal -> ConstExp
+//              | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
+class ConstInitVal : public BaseASTNode {
 public:
-    explicit MulExp() = default;
-    explicit MulExp(const std::vector<UnaryExp>& unaryExps,
-                    const std::vector<Token>& ops);
+    enum Type {
+        EXP,
+        ARR,
+    };
+
+    explicit ConstInitVal() = default;
+    explicit ConstInitVal(const ConstExp& constExp);
+    explicit ConstInitVal(const std::vector<ConstInitVal>& constInitVals);
 
     std::string dump() const override;
 
 private:
-    std::vector<UnaryExp> unaryExps;
-    std::vector<Token> ops;
+    ConstExp constExp;
+    std::vector<ConstInitVal> constInitVals;
+
+    Type type{};
+};
+
+//  ConstDef → Ident { '[' ConstExp ']' } '=' ConstInitVal
+class ConstDef : public BaseASTNode {
+public:
+    explicit ConstDef() = default;
+    explicit ConstDef(const Ident& ident,
+                      const std::vector<ConstExp>& constExps,
+                      const ConstInitVal& constInitVal);
+
+    std::string dump() const override;
+
+private:
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    ConstInitVal constInitVal;
 
 };
 

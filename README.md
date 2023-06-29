@@ -153,3 +153,13 @@ Secondary Symbols:
 
 ## Syntactic Analyze
 
+Change the left recursion.
+
+```
+MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
+
+AddExp -> MulExp { ('+' | '-') MulExp )
+
+RelExp -> AddExp { ('<' | '>' | '<=' | '>=') AddExp )
+```
+

@@ -596,3 +596,75 @@ std::string MulExp::dump() const {
     }
     return res + unaryExps[unaryExps.size() - 1].dump();
 }
+
+/*
+ * class AddExp
+ */
+AddExp::AddExp(const std::vector<MulExp>& mulExps,
+               const std::vector<Token>& ops) {
+    this->mulExps = mulExps;
+    this->ops = ops;
+}
+
+std::string AddExp::dump() const {
+    std::string res = "AddExp { ";
+    for (auto i = 0; i < mulExps.size() - 1; i++) {
+        res += mulExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + mulExps[mulExps.size() - 1].dump();
+}
+
+/*
+ * class RelExp
+ */
+RelExp::RelExp(const std::vector<AddExp>& addExps,
+               const std::vector<Token>& ops) {
+    this->addExps = addExps;
+    this->ops = ops;
+}
+
+std::string RelExp::dump() const {
+    std::string res = "RelExp { ";
+    for (auto i = 0; i < addExps.size() - 1; i++) {
+        res += addExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + addExps[addExps.size() - 1].dump();
+}
+
+/*
+ * class EqExp
+ */
+EqExp::EqExp(const std::vector<RelExp>& relExps,
+             const std::vector<Token>& ops) {
+    this->relExps = relExps;
+    this->ops = ops;
+}
+
+std::string EqExp::dump() const {
+    std::string res = "EqExp { ";
+    for (auto i = 0; i < relExps.size() - 1; i++) {
+        res += relExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + relExps[relExps.size() - 1].dump();
+}
+
+/*
+ * class LAndExp
+ */
+LAndExp::LAndExp(const std::vector<EqExp>& eqExps,
+                 const std::vector<Token>& ops) {
+    this->eqExps = eqExps;
+    this->ops = ops;
+}
+
+std::string LAndExp::dump() const {
+    std::string res = "LAndExp { ";
+    for (auto i = 0; i < eqExps.size() - 1; i++) {
+        res += eqExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + eqExps[eqExps.size() - 1].dump();
+}
