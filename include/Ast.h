@@ -212,6 +212,9 @@ public:
     explicit FuncDef() = default;
     explicit FuncDef(const FuncType& funcType,
                      const Ident& ident,
+                     const Block& block);
+    explicit FuncDef(const FuncType& funcType,
+                     const Ident& ident,
                      const FuncFParams& funcFParams,
                      const Block& block);
 
@@ -222,6 +225,8 @@ private:
     Ident ident;
     FuncFParams funcFParams;
     Block block;
+
+    bool hasParams{};
 
 };
 
@@ -438,8 +443,6 @@ private:
 
 };
 
-
-
 // Exp -> AddExp
 class Exp : public BaseASTNode {
 public:
@@ -504,6 +507,47 @@ private:
     Type type{};
 };
 
+// UnaryExp -> PrimaryExp
+//           | Ident '(' [FuncRParams] ')'
+//           | UnaryOp UnaryExp
+class UnaryExp : public BaseASTNode {
+public:
+    enum Type {
+        PRI,
+        IDE,
+        UNA,
+    };
+
+    explicit UnaryExp() = default;
+    explicit UnaryExp(const PrimaryExp& primaryExp);
+    explicit UnaryExp(const Ident& ident);
+    explicit UnaryExp(const Ident& ident,
+                      const FuncRParams& funcRParams);
+    explicit UnaryExp(const UnaryOp& unaryOp,
+                      const UnaryExp& unaryExp);
+
+    std::string dump() const override;
+
+private:
+    PrimaryExp primaryExp;
+
+    Ident ident;
+    FuncRParams funcRParams;
+    bool hasParams{};
+
+    UnaryOp unaryOp;
+    UnaryExp unaryExp;
+
+    Type type{};
+};
+
+// MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
+class MulExp : public BaseASTNode {
+public:
+
+private:
+
+};
 
 class Ast {
 public:

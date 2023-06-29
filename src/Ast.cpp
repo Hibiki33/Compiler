@@ -130,10 +130,6 @@ std::string Decl::dump() const {
 }
 
 /*
- * Def
- */
-
-/*
  * class MainFuncDef
  */
 MainFuncDef::MainFuncDef(const Block& block) {
@@ -374,19 +370,29 @@ std::string VarDef::dump() const {
  */
 FuncDef::FuncDef(const FuncType& funcType,
                  const Ident& ident,
+                 const Block& block) {
+    this->funcType = funcType;
+    this->ident = ident;
+    this->block = block;
+    hasParams = false;
+}
+
+FuncDef::FuncDef(const FuncType& funcType,
+                 const Ident& ident,
                  const FuncFParams& funcFParams,
                  const Block& block) {
     this->funcType = funcType;
     this->ident = ident;
     this->funcFParams = funcFParams;
     this->block = block;
+    hasParams = true;
 }
 
 std::string FuncDef::dump() const {
     return "FuncDef { " +
     funcType.dump() +
     ident.dump() +
-    "(" + funcFParams.dump() + ")" +
+    std::string(hasParams ? "(" + funcFParams.dump() + ")" : "") +
     block.dump() +
     " }";
 }
@@ -520,6 +526,54 @@ std::string PrimaryExp::dump() const {
             break;
         case NUM:
             res += number.dump();
+            break;
+    }
+    return res + " }";
+}
+
+/*
+ * class UnaryExp
+ */
+UnaryExp::UnaryExp(const PrimaryExp& primaryExp) {
+    this->primaryExp = primaryExp;
+    type = PRI;
+}
+
+UnaryExp::UnaryExp(const Ident &ident) {
+    this->ident = ident;
+    hasParams = false;
+    type = IDE;
+}
+
+UnaryExp::UnaryExp(const Ident& ident,
+                   const FuncRParams& funcRParams) {
+    this->ident = ident;
+    this->funcRParams = funcRParams;
+    hasParams = true;
+    type = IDE;
+}
+
+UnaryExp::UnaryExp(const UnaryOp& unaryOp,
+                   const UnaryExp& unaryExp) {
+    this->unaryOp = unaryOp;
+    this->unaryExp = unaryExp;
+    type = UNA;
+}
+
+std::string UnaryExp::dump() const {
+    std::string res = "UnaryExp { ";
+    switch (type) {
+        case PRI:
+            res += primaryExp.dump();
+            break;
+        case IDE:
+            res += ident.dump();
+            if (hasParams) {
+                res += funcRParams.dump();
+            }
+            break;
+        case UNA:
+            res += unaryOp.dump() + unaryExp.dump();
             break;
     }
     return res + " }";
