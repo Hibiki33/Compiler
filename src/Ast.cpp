@@ -686,3 +686,15 @@ std::string LOrExp::dump() const {
     }
     return res + lAndExps[lAndExps.size() - 1].dump();
 }
+
+/*
+ * class Cond
+ */
+Cond::Cond(const LOrExp& lOrExp) {
+    this->lOrExp = lOrExp;
+}
+
+std::string Cond::dump() const {
+    return "Cond { " +
+    lOrExp.dump();
+}

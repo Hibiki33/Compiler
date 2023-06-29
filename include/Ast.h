@@ -474,6 +474,19 @@ private:
 
 };
 
+// Cond -> LOrExp
+class Cond : public BaseASTNode {
+public:
+    explicit Cond() = default;
+    explicit Cond(const LOrExp& lOrExp);
+
+    std::string dump() const override;
+
+private:
+    LOrExp lOrExp;
+
+};
+
 // ConstExp → AddExp
 class ConstExp : public BaseASTNode {
 public:
