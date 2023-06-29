@@ -444,7 +444,7 @@ private:
 
 };
 
-// LAndExp -> EqExp { '&& EqExp }
+// LAndExp -> EqExp { '&&' EqExp }
 class LAndExp : public BaseASTNode {
 public:
     explicit LAndExp() = default;
@@ -459,6 +459,20 @@ private:
 
 };
 
+// LOrExp -> LAndExp { '||' LAndExp }
+class LOrExp : public BaseASTNode {
+public:
+    explicit LOrExp() = default;
+    explicit LOrExp(const std::vector<LAndExp>& lAndExps,
+                    const std::vector<Token>& ops);
+
+    std::string dump() const override;
+
+private:
+    std::vector<LAndExp> lAndExps;
+    std::vector<Token> ops;
+
+};
 
 // ConstExp → AddExp
 class ConstExp : public BaseASTNode {
@@ -508,6 +522,40 @@ private:
 
     Type type{};
 
+};
+
+// UnaryExp -> PrimaryExp
+//           | Ident '(' [FuncRParams] ')'
+//           | UnaryOp UnaryExp
+class UnaryExp : public BaseASTNode {
+public:
+    enum Type {
+        PRI,
+        IDE,
+        UNA,
+    };
+
+    explicit UnaryExp() = default;
+    explicit UnaryExp(const PrimaryExp& primaryExp);
+    explicit UnaryExp(const Ident& ident);
+    explicit UnaryExp(const Ident& ident,
+                      const FuncRParams& funcRParams);
+    explicit UnaryExp(const UnaryOp& unaryOp,
+                      UnaryExp unaryExp);
+
+    std::string dump() const override;
+
+private:
+    PrimaryExp primaryExp;
+
+    Ident ident;
+    FuncRParams funcRParams;
+    bool hasParams{};
+
+    UnaryOp unaryOp;
+    UnaryExp* unaryExp{};
+
+    Type type{};
 };
 
 // InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'

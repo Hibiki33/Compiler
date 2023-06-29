@@ -308,7 +308,7 @@ ConstExp::ConstExp(const AddExp &addExp) {
 
 std::string ConstExp::dump() const {
     return "ConstExp { " +
-    addExp.dump()
+    addExp.dump() +
     " }";
 }
 
@@ -456,7 +456,7 @@ Exp::Exp(const AddExp& addExp) {
 
 std::string Exp::dump() const {
     return "Exp { " +
-    addExp.dump()
+    addExp.dump() +
     " }";
 }
 
@@ -554,9 +554,9 @@ UnaryExp::UnaryExp(const Ident& ident,
 }
 
 UnaryExp::UnaryExp(const UnaryOp& unaryOp,
-                   const UnaryExp& unaryExp) {
+                   UnaryExp unaryExp) {
     this->unaryOp = unaryOp;
-    this->unaryExp = unaryExp;
+    this->unaryExp = &unaryExp;
     type = UNA;
 }
 
@@ -573,7 +573,7 @@ std::string UnaryExp::dump() const {
             }
             break;
         case UNA:
-            res += unaryOp.dump() + unaryExp.dump();
+            res += unaryOp.dump() + unaryExp->dump();
             break;
     }
     return res + " }";
@@ -667,4 +667,22 @@ std::string LAndExp::dump() const {
         res += ops[i].getTokenString() + " ";
     }
     return res + eqExps[eqExps.size() - 1].dump();
+}
+
+/*
+ * class LOrExp
+ */
+LOrExp::LOrExp(const std::vector<LAndExp>& lAndExps,
+                const std::vector<Token>& ops) {
+    this->lAndExps = lAndExps;
+    this->ops = ops;
+}
+
+std::string LOrExp::dump() const {
+    std::string res = "LOrExp { ";
+    for (auto i = 0; i < lAndExps.size() - 1; i++) {
+        res += lAndExps[i].dump() + " ";
+        res += ops[i].getTokenString() + " ";
+    }
+    return res + lAndExps[lAndExps.size() - 1].dump();
 }
