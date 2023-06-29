@@ -7,8 +7,8 @@
 /*
  * class BaseASTNode
  */
-std::ostream& BaseASTNode::operator<<(std::ostream& os) const {
-    os << dump();
+std::ostream& operator<<(std::ostream& os, const BaseASTNode& node) {
+    os << node.dump();
     return os;
 }
 

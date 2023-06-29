@@ -57,7 +57,7 @@ public:
 
     virtual std::string dump() const = 0;
 
-    std::ostream& operator<<(std::ostream& os) const;
+    friend std::ostream& operator<<(std::ostream& os, const BaseASTNode& node);
 };
 
 // BType -> 'int'
