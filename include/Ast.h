@@ -242,14 +242,6 @@ private:
     Block block;
 };
 
-
-
-
-
-
-
-
-
 // ConstDecl -> 'const' BType ConstDef { ',' ConstDef } ';'
 class ConstDecl : public BaseASTNode {
 public:
@@ -313,11 +305,29 @@ private:
 //      | 'printf''('FormatString{','Exp}')'';'
 class Stmt : public BaseASTNode {
 public:
+    enum Type {
+        ASSIGNEXP,
+        EXP,
+        BLOCK,
+        BRANCH,
+        LOOP,
+        BREAK,
+        RETURN,
+        INPUT,
+        OUTPUT,
+        NONE,
+    };
+
+    explicit Stmt() = default;
+    explicit Stmt(const std::vector<BaseASTNode>& stmtNodes,
+                  Stmt::Type type);
 
     std::string dump() const override;
 
 private:
+    std::vector<BaseASTNode> stmtNodes;
 
+    Type type{};
 };
 
 // BlockItem -> Decl | Stmt
@@ -549,24 +559,28 @@ public:
     };
 
     explicit UnaryExp() = default;
-    explicit UnaryExp(const PrimaryExp& primaryExp);
-    explicit UnaryExp(const Ident& ident);
-    explicit UnaryExp(const Ident& ident,
-                      const FuncRParams& funcRParams);
-    explicit UnaryExp(const UnaryOp& unaryOp,
-                      UnaryExp unaryExp);
+//    explicit UnaryExp(const PrimaryExp& primaryExp);
+//    explicit UnaryExp(const Ident& ident);
+//    explicit UnaryExp(const Ident& ident,
+//                      const FuncRParams& funcRParams);
+//    explicit UnaryExp(const UnaryOp& unaryOp,
+//                      UnaryExp unaryExp);
+    explicit UnaryExp(const std::vector<BaseASTNode>& unaryExpNodes,
+                      UnaryExp::Type type);
 
     std::string dump() const override;
 
 private:
-    PrimaryExp primaryExp;
+//    PrimaryExp primaryExp;
+//
+//    Ident ident;
+//    FuncRParams funcRParams;
+//    bool hasParams{};
+//
+//    UnaryOp unaryOp;
+//    UnaryExp* unaryExp{};
 
-    Ident ident;
-    FuncRParams funcRParams;
-    bool hasParams{};
-
-    UnaryOp unaryOp;
-    UnaryExp* unaryExp{};
+    std::vector<BaseASTNode> unaryExpNodes;
 
     Type type{};
 };

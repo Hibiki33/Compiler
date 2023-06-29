@@ -534,46 +534,71 @@ std::string PrimaryExp::dump() const {
 /*
  * class UnaryExp
  */
-UnaryExp::UnaryExp(const PrimaryExp& primaryExp) {
-    this->primaryExp = primaryExp;
-    type = PRI;
-}
+//UnaryExp::UnaryExp(const PrimaryExp& primaryExp) {
+//    this->primaryExp = primaryExp;
+//    type = PRI;
+//}
+//
+//UnaryExp::UnaryExp(const Ident &ident) {
+//    this->ident = ident;
+//    hasParams = false;
+//    type = IDE;
+//}
+//
+//UnaryExp::UnaryExp(const Ident& ident,
+//                   const FuncRParams& funcRParams) {
+//    this->ident = ident;
+//    this->funcRParams = funcRParams;
+//    hasParams = true;
+//    type = IDE;
+//}
+//
+//UnaryExp::UnaryExp(const UnaryOp& unaryOp,
+//                   UnaryExp unaryExp) {
+//    this->unaryOp = unaryOp;
+//    this->unaryExp = &unaryExp;
+//    type = UNA;
+//}
+//
+//std::string UnaryExp::dump() const {
+//    std::string res = "UnaryExp { ";
+//    switch (type) {
+//        case PRI:
+//            res += primaryExp.dump();
+//            break;
+//        case IDE:
+//            res += ident.dump();
+//            if (hasParams) {
+//                res += funcRParams.dump();
+//            }
+//            break;
+//        case UNA:
+//            res += unaryOp.dump() + unaryExp->dump();
+//            break;
+//    }
+//    return res + " }";
+//}
 
-UnaryExp::UnaryExp(const Ident &ident) {
-    this->ident = ident;
-    hasParams = false;
-    type = IDE;
-}
-
-UnaryExp::UnaryExp(const Ident& ident,
-                   const FuncRParams& funcRParams) {
-    this->ident = ident;
-    this->funcRParams = funcRParams;
-    hasParams = true;
-    type = IDE;
-}
-
-UnaryExp::UnaryExp(const UnaryOp& unaryOp,
-                   UnaryExp unaryExp) {
-    this->unaryOp = unaryOp;
-    this->unaryExp = &unaryExp;
-    type = UNA;
+UnaryExp::UnaryExp(const std::vector<BaseASTNode>& unaryExpNodes,
+                   UnaryExp::Type type) {
+    this->unaryExpNodes = unaryExpNodes;
+    this->type = type;
 }
 
 std::string UnaryExp::dump() const {
     std::string res = "UnaryExp { ";
     switch (type) {
         case PRI:
-            res += primaryExp.dump();
+            res += unaryExpNodes[0].dump();
             break;
         case IDE:
-            res += ident.dump();
-            if (hasParams) {
-                res += funcRParams.dump();
+            res += unaryExpNodes[0].dump();
+            if (unaryExpNodes.size() == 2) {
+                res += "(" + unaryExpNodes[1].dump() + ")";
             }
             break;
         case UNA:
-            res += unaryOp.dump() + unaryExp->dump();
+            res += unaryExpNodes[0].dump() + unaryExpNodes[1].dump();
             break;
     }
     return res + " }";
@@ -698,3 +723,61 @@ std::string Cond::dump() const {
     return "Cond { " +
     lOrExp.dump();
 }
+
+/*
+ * class Stmt
+ */
+Stmt::Stmt(const std::vector<BaseASTNode> &stmtNodes,
+           Stmt::Type type) {
+    this->stmtNodes = stmtNodes;
+    this->type = type;
+}
+
+std::string Stmt::dump() const {
+    std::string res = "Stmt { ";
+    switch (type) {
+        case ASSIGNEXP:
+            res += stmtNodes[0].dump()  + " = " + stmtNodes[1].dump() + ";";
+            break;
+        case EXP:
+            res += stmtNodes[0].dump() + ";";
+            break;
+        case BLOCK:
+            res += stmtNodes[0].dump();
+            break;
+        case BRANCH:
+            res += "if (" + stmtNodes[0].dump() + ") " + stmtNodes[1].dump();
+            if (stmtNodes.size() == 3) {
+                res += " else " + stmtNodes[2].dump();
+            }
+            break;
+        case LOOP:
+            res += "if (" + stmtNodes[0].dump() + ") " + stmtNodes[1].dump();
+            break;
+        case BREAK:
+            res += "break;";
+            break;
+        case RETURN:
+            res += "continue;";
+            break;
+        case INPUT:
+            res += stmtNodes[0].dump() + " = getint();";
+            break;
+        case OUTPUT:
+            res += "printf(" + stmtNodes[0].dump();
+            for (int i = 1; i < stmtNodes.size(); i++) {
+                res += ", " + stmtNodes[i].dump();
+            }
+            res += ");";
+            break;
+        case NONE:
+            res += ";";
+        default:
+            res += "";
+            break;
+    }
+    return res + " }";
+}
+
+
+
