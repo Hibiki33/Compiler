@@ -18,6 +18,7 @@ bool Parser::syntacticAnalyze() {
     return index == tokens.size();
 }
 
+// CompUnit ->  {Decl} {FuncDef} MainFuncDef
 CompUnit Parser::parseCompUnit() {
     std::vector<Decl> decls;
     std::vector<FuncDef> funcDefs;
@@ -36,6 +37,7 @@ CompUnit Parser::parseCompUnit() {
     return CompUnit(decls, funcDefs, mainFuncDef);
 }
 
+// Decl -> ConstDecl | VarDecl;
 Decl Parser::parseDecl() {
     if (getSymbol(0) == "CONSTTK") {
         return Decl(parseConstDecl());
@@ -43,12 +45,67 @@ Decl Parser::parseDecl() {
     return Decl(parseVarDecl());
 }
 
+// ConstDecl -> 'const' BType ConstDef { ',' ConstDef } ';'
 ConstDecl Parser::parseConstDecl() {
+    BType bType;
+    std::vector<ConstDef> constDefs;
+
+    if (getSymbol(0) != "CONSTTK") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    bType = parseBType();
+
+    // one 'ConstDef' at least
+    constDefs.push_back(parseConstDef());
+    while (getSymbol(0) == "COMMA") {
+        index += 1;
+        constDefs.push_back(parseConstDef());
+    }
+
+    return ConstDecl(bType, constDefs);
 }
+
+// BType -> 'int'
 BType Parser::parseBType() {
+    if (getSymbol(0) != "INTTK") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+    return BType(BType::Type::INT);
 }
+
+// ConstDef -> Ident { '[' ConstExp ']' } '=' ConstInitVal
 ConstDef Parser::parseConstDef(){
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    ConstInitVal constInitVal;
+
+    if (getSymbol(0) != "IDENFR") {
+        // TODO: HANDLE ERROR
+    }
+    ident = parseIdent();
+
+    while (getSymbol(0) == "LBRACK") {
+        index += 1;
+        constExps.push_back(parseConstExp());
+        if (getSymbol(0) != "RBRACK") {
+            // TODO: HANDLE ERROR
+        }
+        index += 1;
+    }
+
+    if (getSymbol(0) != "ASSIGN") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    constInitVal = parseConstInitVal();
+
+    return ConstDef(ident, constExps, constInitVal);
 }
+
 ConstInitVal Parser::parseConstInitVal(){
 }
 VarDecl Parser::parseVarDecl(){
