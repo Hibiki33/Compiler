@@ -19,8 +19,47 @@ namespace Front {
 
         ~Parser();
 
+        CompUnit parseCompUnit();
+        Decl parseDecl();
+        ConstDecl parseConstDecl();
+        BType parseBType();
+        ConstDef parseConstDef();
+        ConstInitVal parseConstInitVal();
+        VarDecl parseVarDecl();
+        VarDef parseVarDef();
+        InitVal parseInitVal();
+        FuncDef parseFuncDef();
+        MainFuncDef parseMainFuncDef();
+        FuncType parseFuncType();
+        FuncFParams parseFuncFParams();
+        FuncFParam parseFuncFParam();
+        Block parseBlock();
+        BlockItem parseBlockItem();
+        Stmt parseStmt();
+        Exp parseExp();
+        Cond parseCond();
+        LVal parseLVal();
+        PrimaryExp parsePrimaryExp();
+        Number parseNumber();
+        UnaryExp parseUnaryExp();
+        FuncRParams parseFuncRParams();
+        MulExp parseMulExp();
+        AddExp parseAddExp();
+        RelExp parseRelExp();
+        EqExp parseEqExp();
+        LAndExp parseLAndExp();
+        LOrExp parseLOrExp();
+        ConstExp parseConstExp();
+        IntConst parseIntConst();
+        Ident parseIdent();
+        FormatString parseFormatString();
+        UnaryOp parseUnaryOp();
+
     private:
         std::vector<Token> tokenList;
+
+
+
 
     };
 }

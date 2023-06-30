@@ -173,6 +173,18 @@ CompUnit::CompUnit(const std::vector<Decl>& decls,
     this->mainFuncDef = mainFuncDef;
 }
 
+std::string CompUnit::dump() const {
+    std::string res = "CompUnit { ";
+    for (const auto& decl : decls) {
+        res += decl.dump();
+    }
+    for (const auto& funcDef : funcDefs) {
+        res += funcDef.dump();
+    }
+    res += mainFuncDef.dump();
+    return res + " }";
+}
+
 /*
  * class BlockItem
  */

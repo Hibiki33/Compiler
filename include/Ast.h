@@ -416,6 +416,8 @@ namespace Front {
                           const std::vector<FuncDef> &funcDefs,
                           const MainFuncDef &mainFuncDef);
 
+        std::string dump() const override;
+
     private:
         std::vector<Decl> decls;
         std::vector<FuncDef> funcDefs;
