@@ -3,6 +3,8 @@
 //
 #include "Token.h"
 
+using namespace Front;
+
 Token::Token(const std::string& sym, const std::string& str, int lin) {
     tokenSymbol = sym;
     tokenString = str;

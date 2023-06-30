@@ -4,8 +4,8 @@
 
 #include "Parser.h"
 
-Parser::Parser(const std::vector<Token>& tokens) {
-    tokenList = tokens;
-}
+using namespace Front;
+
+Parser::Parser(const std::vector<Token>& tokenList) : tokenList(tokenList) {}
 
 Parser::~Parser() = default;

@@ -161,5 +161,11 @@ MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
 AddExp -> MulExp { ('+' | '-') MulExp )
 
 RelExp -> AddExp { ('<' | '>' | '<=' | '>=') AddExp )
+
+EqExp -> RelExp { ('==' | '!=') RelExp }
+
+LAndExp -> EqExp { '&&' EqExp }
+
+LOrExp -> LAndExp { '||' LAndExp }
 ```
 

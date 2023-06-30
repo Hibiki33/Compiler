@@ -13,38 +13,44 @@
 #include <map>
 #include "Token.h"
 
-class Lexer {
-public:
-    explicit Lexer(const std::string& fileName);
+namespace Front {
+    class Lexer {
+    public:
+        explicit Lexer(const std::string &fileName);
 
-    ~Lexer();
+        ~Lexer();
 
-    void nextToken();
+        void nextToken();
 
-    TokenSymbol getPresentToken();
-    std::string getPresentString();
-    int getPresentLineNumber() const;
+        TokenSymbol getPresentToken();
 
-    Token getToken(int index);
-    std::vector<Token> getTokenList();
+        std::string getPresentString();
 
-    std::vector<Token> sourceToTokens();
+        int getPresentLineNumber() const;
 
-private:
-    std::ifstream sourceFile;
+        Token getToken(int index);
 
-    std::map<std::string, TokenSymbol> reservedWords;
-    std::map<std::string, TokenSymbol> reservedSingle;
-    std::map<std::string, TokenSymbol> reservedSpecial;
+        std::vector<Token> getTokenList();
 
-    TokenSymbol presentToken;
-    std::string presentString;
-    int presentLineNumber;
+        std::vector<Token> sourceToTokens();
 
-    std::vector<Token> tokenList;
-    void addToken(TokenSymbol sym, const std::string& str, int lin);
+    private:
+        std::ifstream sourceFile;
 
-    char bufCh;
-};
+        std::map<std::string, TokenSymbol> reservedWords;
+        std::map<std::string, TokenSymbol> reservedSingle;
+        std::map<std::string, TokenSymbol> reservedSpecial;
+
+        TokenSymbol presentToken;
+        std::string presentString;
+        int presentLineNumber;
+
+        std::vector<Token> tokenList;
+
+        void addToken(TokenSymbol sym, const std::string &str, int lin);
+
+        char bufCh;
+    };
+}
 
 #endif //COMPILER_LEXER_H

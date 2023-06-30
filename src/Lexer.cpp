@@ -4,6 +4,8 @@
 
 #include "Lexer.h"
 
+using namespace Front;
+
 Lexer::Lexer(const std::string& fileName) {
     reservedWords["main"] = MAINTK;
     reservedWords["const"] = CONSTTK;

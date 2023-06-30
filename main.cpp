@@ -3,6 +3,8 @@
 #include "Parser.h"
 #include "Token.h"
 
+using namespace Front;
+
 int main() {
     std::string testFileName = "./testfiles/LexicalAnalyze/testfile.txt";
     std::string outFileName = "./testfiles/LexicalAnalyze/output.txt";
@@ -19,7 +21,7 @@ int main() {
         }
     }
 
-     for (auto token : lexicalAnalyzer.getTokenList()) {
+     for (const auto& token : lexicalAnalyzer.getTokenList()) {
         std::cout << token.getTokenSymbol() << " " << token.getTokenString() << std::endl;
      }
 

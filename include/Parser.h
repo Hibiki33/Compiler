@@ -10,18 +10,19 @@
 #include <string>
 #include <vector>
 #include "Token.h"
+#include "Ast.h"
 
+namespace Front {
+    class Parser {
+    public:
+        explicit Parser(const std::vector<Token> &tokenList);
 
-class Parser {
-public:
-    explicit Parser(const std::vector<Token>& tokens);
+        ~Parser();
 
-    ~Parser();
+    private:
+        std::vector<Token> tokenList;
 
-private:
-    std::vector<Token> tokenList;
-
-};
-
+    };
+}
 
 #endif //COMPILER_PARSER_H
