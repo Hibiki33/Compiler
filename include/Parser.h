@@ -15,9 +15,18 @@
 namespace Front {
     class Parser {
     public:
-        explicit Parser(const std::vector<Token> &tokenList);
+        explicit Parser(const std::vector<Token> &tokens);
 
         ~Parser();
+
+        bool syntacticAnalyze();
+
+    private:
+        std::vector<Token> tokens;
+
+        int index;
+
+        Ast entry;
 
         CompUnit parseCompUnit();
         Decl parseDecl();
@@ -55,12 +64,8 @@ namespace Front {
         FormatString parseFormatString();
         UnaryOp parseUnaryOp();
 
-    private:
-        std::vector<Token> tokenList;
-
-
-
-
+        std::string getSymbol(int bias);
+        std::string getString(int bias);
     };
 }
 

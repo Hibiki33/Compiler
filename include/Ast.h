@@ -749,13 +749,16 @@ namespace Front {
 
     };
 
+    // Ast, simply a 'CompUnit'
     class Ast {
     public:
-        std::vector<CompUnit> units;
+        explicit Ast() = default;
+        explicit Ast(const CompUnit& unit);
+        ~Ast() = default;
 
-
+    private:
+        CompUnit unit;
     };
-
 }
 
 #endif //COMPILER_AST_H

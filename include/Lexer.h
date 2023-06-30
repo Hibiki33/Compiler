@@ -32,7 +32,7 @@ namespace Front {
 
         std::vector<Token> getTokenList();
 
-        std::vector<Token> sourceToTokens();
+        std::vector<Token> lexicalAnalyze();
 
     private:
         std::ifstream sourceFile;

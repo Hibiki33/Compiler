@@ -6,26 +6,46 @@
 
 using namespace Front;
 
-Parser::Parser(const std::vector<Token>& tokenList) : tokenList(tokenList) {}
+Parser::Parser(const std::vector<Token>& tokens) {
+    this->tokens = tokens;
+    index = 0;
+}
 
 Parser::~Parser() = default;
+
+bool Parser::syntacticAnalyze() {
+    entry = Ast(parseCompUnit());
+    return index == tokens.size();
+}
 
 CompUnit Parser::parseCompUnit() {
     std::vector<Decl> decls;
     std::vector<FuncDef> funcDefs;
     MainFuncDef mainFuncDef;
 
+    while (getSymbol(2) != "LPARENT") {
+        decls.push_back(parseDecl());
+    }
 
+    while (getSymbol(1) != "MAINTK") {
+        funcDefs.push_back(parseFuncDef());
+    }
 
+    mainFuncDef = parseMainFuncDef();
 
     return CompUnit(decls, funcDefs, mainFuncDef);
 }
 
-Decl Parser::parseDecl(){
+Decl Parser::parseDecl() {
+    if (getSymbol(0) == "CONSTTK") {
+        return Decl(parseConstDecl());
+    }
+    return Decl(parseVarDecl());
 }
-ConstDecl Parser::parseConstDecl(){
+
+ConstDecl Parser::parseConstDecl() {
 }
-BType Parser::parseBType(){
+BType Parser::parseBType() {
 }
 ConstDef Parser::parseConstDef(){
 }
@@ -89,6 +109,18 @@ FormatString Parser::parseFormatString(){
 }
 UnaryOp Parser::parseUnaryOp(){
 }
+
+std::string Parser::getSymbol(int bias) {
+    return tokens[index + bias].getTokenSymbol();
+}
+
+std::string Parser::getString(int bias) {
+    return tokens[index + bias].getTokenString();
+}
+
+
+
+
 
 
 

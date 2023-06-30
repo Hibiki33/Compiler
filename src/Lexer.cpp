@@ -233,7 +233,7 @@ std::vector<Token> Lexer::getTokenList() {
  * Overview: Make 'sourceFile' into 'tokenList'.
  *  Use 'nextToken' to walk through each token.
  */
-std::vector<Token> Lexer::sourceToTokens() {
+std::vector<Token> Lexer::lexicalAnalyze() {
     while (getPresentToken() != END) {
         nextToken();
     }

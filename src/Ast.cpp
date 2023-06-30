@@ -793,5 +793,9 @@ std::string Stmt::dump() const {
     return res + " }";
 }
 
-
-
+/*
+ * class Ast
+ */
+Ast::Ast(const CompUnit &unit) {
+    this->unit = unit;
+}
