@@ -341,17 +341,52 @@ Stmt Parser::parseStmt() {
 
 }
 
+// Exp -> AddExp
 Exp Parser::parseExp() {
-
+    return Exp(parseAddExp());
 }
 
+// Cond -> LOrExp
 Cond Parser::parseCond() {
+    return Cond(parseLOrExp());
+}
 
-}
+// LVal -> Ident {'[' Exp ']'}
 LVal Parser::parseLVal(){
+    Ident ident;
+    std::vector<Exp> exps;
+
+    ident = parseIdent();
+
+    if (getSymbol(0) != "LBRACK") {
+        // TODO:
+    }
+    index += 1;
+
+    while (getSymbol(0) != "RBRACK") {
+        exps.push_back(parseExp());
+    }
+    index += 1;
+
+    return LVal(ident, exps);
 }
-PrimaryExp Parser::parsePrimaryExp(){
+
+// PrimaryExp -> '(' Exp ')' | LVal | Number
+PrimaryExp Parser::parsePrimaryExp() {
+    if (getSymbol(0) == "LPARENT") {
+        index += 1;
+        Exp exp = parseExp();
+        if (getSymbol(0) != "RPARENT") {
+            // TODO:
+        }
+        index += 1;
+    } else if (getSymbol(0) == "INTCON") {
+        return PrimaryExp(parseNumber());
+    }
+
+    return PrimaryExp(parseLVal());
 }
+
 Number Parser::parseNumber(){
 }
 UnaryExp Parser::parseUnaryExp(){
