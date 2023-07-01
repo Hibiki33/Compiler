@@ -387,10 +387,45 @@ PrimaryExp Parser::parsePrimaryExp() {
     return PrimaryExp(parseLVal());
 }
 
-Number Parser::parseNumber(){
+// Number -> IntConst
+Number Parser::parseNumber() {
+    return Number(parseIntConst());
 }
-UnaryExp Parser::parseUnaryExp(){
+
+// UnaryExp -> PrimaryExp
+//           | Ident '(' [FuncRParams] ')'
+//           | UnaryOp UnaryExp
+UnaryExp Parser::parseUnaryExp() {
+    // in case of 'LVal' in 'Primary', whose first token is 'Ident'
+    if (getSymbol(0) == "IDENFR" && getSymbol(1) == "LPARENT") {
+        Ident ident = parseIdent();
+        // for "LPARENT"
+        index += 1;
+
+        if (getSymbol(0) == "RPARENT") {
+            index += 1;
+            return UnaryExp(ident);
+        } else {
+            FuncRParams funcRParams = parseFuncRParams();
+            if (getSymbol(0) != "RPARENT") {
+                // TODO:
+            }
+            index += 1;
+
+            return UnaryExp(ident, funcRParams);
+        }
+    } else if (getSymbol(0) == "PLUS" ||
+               getSymbol(0) == "MINU" ||
+               getSymbol(0) == "NOT") {
+        UnaryOp unaryOp = parseUnaryOp();
+        UnaryExp unaryExp = parseUnaryExp();
+        // TODO: Check whether it is correct!
+        return UnaryExp(unaryOp, &unaryExp);
+    }
+
+    return UnaryExp(parsePrimaryExp());
 }
+
 FuncRParams Parser::parseFuncRParams(){
 }
 MulExp Parser::parseMulExp(){
@@ -407,8 +442,15 @@ LOrExp Parser::parseLOrExp(){
 }
 ConstExp Parser::parseConstExp(){
 }
-IntConst Parser::parseIntConst(){
+
+// IntConst
+IntConst Parser::parseIntConst() {
+    Token token = getToken(0);
+    index += 1;
+
+    return IntConst(token);
 }
+
 Ident Parser::parseIdent(){
 }
 FormatString Parser::parseFormatString(){
@@ -420,8 +462,8 @@ std::string Parser::getSymbol(int bias) {
     return tokens[index + bias].getTokenSymbol();
 }
 
-std::string Parser::getString(int bias) {
-    return tokens[index + bias].getTokenString();
+Token Parser::getToken(int bias) {
+    return tokens[index + bias];
 }
 
 

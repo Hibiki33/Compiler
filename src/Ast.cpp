@@ -546,75 +546,75 @@ std::string PrimaryExp::dump() const {
 /*
  * class UnaryExp
  */
-//UnaryExp::UnaryExp(const PrimaryExp& primaryExp) {
-//    this->primaryExp = primaryExp;
-//    type = PRI;
-//}
-//
-//UnaryExp::UnaryExp(const Ident &ident) {
-//    this->ident = ident;
-//    hasParams = false;
-//    type = IDE;
-//}
-//
-//UnaryExp::UnaryExp(const Ident& ident,
-//                   const FuncRParams& funcRParams) {
-//    this->ident = ident;
-//    this->funcRParams = funcRParams;
-//    hasParams = true;
-//    type = IDE;
-//}
-//
-//UnaryExp::UnaryExp(const UnaryOp& unaryOp,
-//                   UnaryExp unaryExp) {
-//    this->unaryOp = unaryOp;
-//    this->unaryExp = &unaryExp;
-//    type = UNA;
-//}
-//
-//std::string UnaryExp::dump() const {
-//    std::string res = "UnaryExp { ";
-//    switch (type) {
-//        case PRI:
-//            res += primaryExp.dump();
-//            break;
-//        case IDE:
-//            res += ident.dump();
-//            if (hasParams) {
-//                res += funcRParams.dump();
-//            }
-//            break;
-//        case UNA:
-//            res += unaryOp.dump() + unaryExp->dump();
-//            break;
-//    }
-//    return res + " }";
-//}
+UnaryExp::UnaryExp(const PrimaryExp& primaryExp) {
+    this->primaryExp = primaryExp;
+    type = PRI;
+}
 
-UnaryExp::UnaryExp(const std::vector<BaseASTNode *>& unaryExpNodes,
-                   UnaryExp::Type type) {
-    this->unaryExpNodes = unaryExpNodes;
-    this->type = type;
+UnaryExp::UnaryExp(const Ident &ident) {
+    this->ident = ident;
+    hasParams = false;
+    type = IDE;
+}
+
+UnaryExp::UnaryExp(const Ident& ident,
+                   const FuncRParams& funcRParams) {
+    this->ident = ident;
+    this->funcRParams = funcRParams;
+    hasParams = true;
+    type = IDE;
+}
+
+UnaryExp::UnaryExp(const UnaryOp& unaryOp,
+                   UnaryExp* unaryExp) {
+    this->unaryOp = unaryOp;
+    this->unaryExp = unaryExp;
+    type = UNA;
 }
 
 std::string UnaryExp::dump() const {
     std::string res = "UnaryExp { ";
     switch (type) {
         case PRI:
-            res += unaryExpNodes[0]->dump();
+            res += primaryExp.dump();
             break;
         case IDE:
-            res += unaryExpNodes[0]->dump();
-            if (unaryExpNodes.size() == 2) {
-                res += "(" + unaryExpNodes[1]->dump() + ")";
+            res += ident.dump();
+            if (hasParams) {
+                res += funcRParams.dump();
             }
             break;
         case UNA:
-            res += unaryExpNodes[0]->dump() + unaryExpNodes[1]->dump();
+            res += unaryOp.dump() + unaryExp->dump();
             break;
     }
     return res + " }";
 }
+
+//UnaryExp::UnaryExp(const std::vector<BaseASTNode *>& unaryExpNodes,
+//                   UnaryExp::Type type) {
+//    this->unaryExpNodes = unaryExpNodes;
+//    this->type = type;
+//}
+//
+//std::string UnaryExp::dump() const {
+//    std::string res = "UnaryExp { ";
+//    switch (type) {
+//        case PRI:
+//            res += unaryExpNodes[0]->dump();
+//            break;
+//        case IDE:
+//            res += unaryExpNodes[0]->dump();
+//            if (unaryExpNodes.size() == 2) {
+//                res += "(" + unaryExpNodes[1]->dump() + ")";
+//            }
+//            break;
+//        case UNA:
+//            res += unaryExpNodes[0]->dump() + unaryExpNodes[1]->dump();
+//            break;
+//    }
+//    return res + " }";
+//}
 
 /*
  * class MulExp

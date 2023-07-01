@@ -65,7 +65,7 @@ namespace Front {
         UnaryOp parseUnaryOp();
 
         std::string getSymbol(int bias);
-        std::string getString(int bias);
+        Token getToken(int bias);
     };
 }
 

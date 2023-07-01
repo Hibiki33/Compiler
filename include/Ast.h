@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdlib>
 #include "Token.h"
 
 namespace Front {
@@ -174,7 +175,7 @@ namespace Front {
 
     };
 
-// UnaryOp
+// UnaryOp -> '+' | '−' | '!'
     class UnaryOp : public BaseASTNode {
     public:
         explicit UnaryOp() = default;
@@ -632,28 +633,28 @@ namespace Front {
 
         explicit UnaryExp() = default;
 
-//    explicit UnaryExp(const PrimaryExp& primaryExp);
-//    explicit UnaryExp(const Ident& ident);
-//    explicit UnaryExp(const Ident& ident,
-//                      const FuncRParams& funcRParams);
-//    explicit UnaryExp(const UnaryOp& unaryOp,
-//                      UnaryExp unaryExp);
-        explicit UnaryExp(const std::vector<BaseASTNode *> &unaryExpNodes,
-                          UnaryExp::Type type);
+        explicit UnaryExp(const PrimaryExp& primaryExp);
+        explicit UnaryExp(const Ident& ident);
+        explicit UnaryExp(const Ident& ident,
+                          const FuncRParams& funcRParams);
+        explicit UnaryExp(const UnaryOp& unaryOp,
+                          UnaryExp* unaryExp);
+//        explicit UnaryExp(const std::vector<BaseASTNode *> &unaryExpNodes,
+//                          UnaryExp::Type type);
 
         std::string dump() const override;
 
     private:
-//    PrimaryExp primaryExp;
-//
-//    Ident ident;
-//    FuncRParams funcRParams;
-//    bool hasParams{};
-//
-//    UnaryOp unaryOp;
-//    UnaryExp* unaryExp{};
+        PrimaryExp primaryExp;
 
-        std::vector<BaseASTNode *> unaryExpNodes;
+        Ident ident;
+        FuncRParams funcRParams;
+        bool hasParams{};
+
+        UnaryOp unaryOp;
+        UnaryExp* unaryExp{};
+
+//        std::vector<BaseASTNode *> unaryExpNodes;
 
         Type type{};
 
