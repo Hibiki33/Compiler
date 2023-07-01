@@ -527,6 +527,7 @@ LAndExp Parser::parseLAndExp() {
     return LAndExp(eqExps, ops);
 }
 
+// LOrExp -> LAndExp { '||' LAndExp }
 LOrExp Parser::parseLOrExp() {
     std::vector<LAndExp> lAndExps;
     std::vector<Token> ops;
@@ -542,8 +543,9 @@ LOrExp Parser::parseLOrExp() {
     return LOrExp(lAndExps, ops);
 }
 
+// ConstExp → AddExp
 ConstExp Parser::parseConstExp() {
-
+    return ConstExp(parseAddExp());
 }
 
 // IntConst
@@ -554,24 +556,54 @@ IntConst Parser::parseIntConst() {
     return IntConst(token);
 }
 
-Ident Parser::parseIdent(){
-}
-FormatString Parser::parseFormatString(){
-}
-UnaryOp Parser::parseUnaryOp(){
+// Ident
+Ident Parser::parseIdent() {
+    if (getSymbol(0) != "IDENFR") {
+        // TODO:
+    }
+
+    Token token = getToken(0);
+    index += 1;
+
+    return Ident(token);
 }
 
+// FormatString
+FormatString Parser::parseFormatString() {
+    if (getSymbol(0) != "STRCON") {
+        // TODO:
+    }
+
+    Token token = getToken(0);
+    index += 1;
+
+    return FormatString(token);
+}
+
+// UnaryOp
+UnaryOp Parser::parseUnaryOp() {
+    if (getSymbol(0) != "PLUS" &&
+        getSymbol(0) != "MINU" &&
+        getSymbol(0) != "NOT") {
+        // TODO:
+    }
+
+    Token token = getToken(0);
+    index += 1;
+
+    return UnaryOp(token);
+}
+
+/*
+ * Overview: Get token's symbol string from index with bias
+ */
 std::string Parser::getSymbol(int bias) {
     return tokens[index + bias].getTokenSymbol();
 }
 
+/*
+ * Overview: Get token itself from index with bias
+ */
 Token Parser::getToken(int bias) {
     return tokens[index + bias];
 }
-
-
-
-
-
-
-
