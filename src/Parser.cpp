@@ -426,21 +426,124 @@ UnaryExp Parser::parseUnaryExp() {
     return UnaryExp(parsePrimaryExp());
 }
 
-FuncRParams Parser::parseFuncRParams(){
+// FuncRParams -> Exp { ',' Exp }
+FuncRParams Parser::parseFuncRParams() {
+    std::vector<Exp> exps;
+
+    // one 'Exp' at least
+    exps.push_back(parseExp());
+    while (getSymbol(0) == "COMMA") {
+        index += 1;
+        exps.push_back(parseExp());
+    }
+
+    return FuncRParams(exps);
 }
-MulExp Parser::parseMulExp(){
+
+// MulExp -> UnaryExp { ('*' | '/' | '%') UnaryExp }
+MulExp Parser::parseMulExp() {
+    std::vector<UnaryExp> unaryExps;
+    std::vector<Token> ops;
+
+    unaryExps.push_back(parseUnaryExp());
+    while (getSymbol(0) == "MULT" ||
+           getSymbol(0) == "DIV" ||
+           getSymbol(0) == "MOD") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        unaryExps.push_back(parseUnaryExp());
+    }
+
+    return MulExp(unaryExps, ops);
 }
-AddExp Parser::parseAddExp(){
+
+// AddExp -> MulExp { ('+' | '-') MulExp }
+AddExp Parser::parseAddExp() {
+    std::vector<MulExp> mulExps;
+    std::vector<Token> ops;
+
+    mulExps.push_back(parseMulExp());
+    while (getSymbol(0) == "PLUS" ||
+           getSymbol(0) == "MINU") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        mulExps.push_back(parseMulExp());
+    }
+
+    return AddExp(mulExps, ops);
 }
-RelExp Parser::parseRelExp(){
+
+// RelExp -> AddExp { ('<' | '>' | '<=' | '>=') AddExp }
+RelExp Parser::parseRelExp() {
+    std::vector<AddExp> addExps;
+    std::vector<Token> ops;
+
+    addExps.push_back(parseAddExp());
+    while (getSymbol(0) == "LSS" ||
+           getSymbol(0) == "LEQ" ||
+           getSymbol(0) == "GRE" ||
+           getSymbol(0) == "GEQ") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        addExps.push_back(parseAddExp());
+    }
+
+    return RelExp(addExps, ops);
 }
-EqExp Parser::parseEqExp(){
+
+// EqExp -> RelExp { ('==' | '!=') RelExp }
+EqExp Parser::parseEqExp() {
+    std::vector<RelExp> relExps;
+    std::vector<Token> ops;
+
+    relExps.push_back(parseRelExp());
+    while (getSymbol(0) == "EQL" ||
+           getSymbol(0) == "NEQ") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        relExps.push_back(parseRelExp());
+    }
+
+    return EqExp(relExps, ops);
 }
-LAndExp Parser::parseLAndExp(){
+
+// LAndExp -> EqExp { '&&' EqExp }
+LAndExp Parser::parseLAndExp() {
+    std::vector<EqExp> eqExps;
+    std::vector<Token> ops;
+
+    eqExps.push_back(parseEqExp());
+    while (getSymbol(0) == "AND") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        eqExps.push_back(parseEqExp());
+    }
+
+    return LAndExp(eqExps, ops);
 }
-LOrExp Parser::parseLOrExp(){
+
+LOrExp Parser::parseLOrExp() {
+    std::vector<LAndExp> lAndExps;
+    std::vector<Token> ops;
+
+    lAndExps.push_back(parseLAndExp());
+    while (getSymbol(0) == "OR") {
+        ops.push_back(getToken(0));
+        index += 1;
+
+        lAndExps.push_back(parseLAndExp());
+    }
+
+    return LOrExp(lAndExps, ops);
 }
-ConstExp Parser::parseConstExp(){
+
+ConstExp Parser::parseConstExp() {
+
 }
 
 // IntConst
