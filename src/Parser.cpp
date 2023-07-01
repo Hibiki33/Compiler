@@ -64,6 +64,11 @@ ConstDecl Parser::parseConstDecl() {
         constDefs.push_back(parseConstDef());
     }
 
+    if (getSymbol(0) != "SEMICN") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
     return ConstDecl(bType, constDefs);
 }
 
@@ -106,20 +111,153 @@ ConstDef Parser::parseConstDef(){
     return ConstDef(ident, constExps, constInitVal);
 }
 
-ConstInitVal Parser::parseConstInitVal(){
+// ConstInitVal -> ConstExp
+//              | '{' [ ConstInitVal { ',' ConstInitVal } ] '}'
+ConstInitVal Parser::parseConstInitVal() {
+    if (getSymbol(0) == "LBRACE") {
+        index += 1;
+
+        std::vector<ConstInitVal> constInitVals;
+        while (getSymbol(0) != "RBRACE") {
+            constInitVals.push_back(parseConstInitVal());
+            if (getSymbol(0) == "COMMA") {
+                index += 1;
+            }
+        }
+        index += 1;
+
+        return ConstInitVal(constInitVals);
+    }
+
+    return ConstInitVal(parseConstExp());
 }
-VarDecl Parser::parseVarDecl(){
+
+// VarDecl -> BType VarDef { ',' VarDef } ';'
+VarDecl Parser::parseVarDecl() {
+    BType bType;
+    std::vector<VarDef> varDefs;
+
+    bType = parseBType();
+
+    // one 'VarDef' at least
+    varDefs.push_back(parseVarDef());
+    while (getSymbol(0) == "COMMA") {
+        index += 1;
+        varDefs.push_back(parseVarDef());
+    }
+
+    if (getSymbol(0) != "SEMICN") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    return VarDecl(bType, varDefs);
 }
-VarDef Parser::parseVarDef(){
+
+// VarDef -> Ident { '[' ConstExp ']' }
+//         | Ident { '[' ConstExp ']' } '=' InitVal
+VarDef Parser::parseVarDef() {
+    Ident ident;
+    std::vector<ConstExp> constExps;
+
+    ident = parseIdent();
+
+    while (getSymbol(0) == "LBRACK") {
+        index += 1;
+        constExps.push_back(parseConstExp());
+        if (getSymbol(0) != "RBRACK") {
+            // TODO: HANDLE ERROR
+        }
+        index += 1;
+    }
+
+    if (getSymbol(0) == "ASSIGN") {
+        index += 1;
+        InitVal initVal = parseInitVal();
+        return VarDef(ident, constExps, initVal);
+    }
+
+    return VarDef(ident, constExps);
 }
-InitVal Parser::parseInitVal(){
+
+// InitVal -> Exp | '{' [ InitVal { ',' InitVal } ] '}'
+InitVal Parser::parseInitVal() {
+    if (getSymbol(0) == "LBRACE") {
+        index += 1;
+
+        std::vector<InitVal> initVals;
+        while (getSymbol(0) != "RBRACE") {
+            initVals.push_back(parseInitVal());
+            if (getSymbol(0) == "COMMA") {
+                index += 1;
+            }
+        }
+        index += 1;
+
+        return InitVal(initVals);
+    }
+
+    return InitVal(parseExp());
 }
-FuncDef Parser::parseFuncDef(){
+
+// FuncDef -> FuncType Ident '(' [FuncFParams] ')' Block
+FuncDef Parser::parseFuncDef() {
+    FuncType funcType;
+    Ident ident;
+    FuncFParams funcFParams;
+    Block block;
+
+    funcType = parseFuncType();
+
+    ident = parseIdent();
+
+    if (getSymbol(0) != "LPARENT") {
+        // TODO: HANDLE ERROR
+    }
+    funcFParams = parseFuncFParams();
+    if (getSymbol(0) != "RPARENT") {
+        // TODO: HANDLE ERROR
+    }
+
+    block = parseBlock();
+
+    return FuncDef(funcType, ident, funcFParams, block);
 }
+
+// MainFuncDef -> 'int' 'main' '(' ')' Block
 MainFuncDef Parser::parseMainFuncDef() {
+    if (getSymbol(0) != "INTTK") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    if (getSymbol(0) != "MAINTK") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    if (getSymbol(0) != "LPARENT") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    if (getSymbol(0) != "RPARENT") {
+        // TODO: HANDLE ERROR
+    }
+    index += 1;
+
+    return MainFuncDef(parseBlock());
 }
-FuncType Parser::parseFuncType(){
+
+// FuncType -> 'void' | 'int'
+FuncType Parser::parseFuncType() {
+    if (getSymbol(0) == "VOIDTK") {
+        return FuncType(FuncType::Type::VOID);
+    }
+
+    return FuncType(FuncType::Type::INT);
 }
+
 FuncFParams Parser::parseFuncFParams(){
 }
 FuncFParam Parser::parseFuncFParam(){

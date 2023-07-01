@@ -169,3 +169,9 @@ LAndExp -> EqExp { '&&' EqExp }
 LOrExp -> LAndExp { '||' LAndExp }
 ```
 
+Back Tracking
+
+```
+Stmt -> LVal '=' Exp ';' | LVal '=' 'getint' '(' ')' ';' 
+```
+
