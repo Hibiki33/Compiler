@@ -434,19 +434,14 @@ std::string FuncFParams::dump() const {
  * class FuncFParam
  */
 FuncFParam::FuncFParam(const BType& bType,
-                       const Ident& ident) {
-    this->bType = bType;
-    this->ident = ident;
-    isArray = false;
-}
-
-FuncFParam::FuncFParam(const BType& bType,
                        const Ident& ident,
-                       const std::vector<ConstExp>& constExps) {
+                       const std::vector<ConstExp>& constExps,
+                       int dimension) {
     this->bType = bType;
     this->ident = ident;
     this->constExps = constExps;
-    isArray = true;
+    this->dimension = dimension;
+    isArray = dimension > 0;
 }
 
 std::string FuncFParam::dump() const {
@@ -454,8 +449,11 @@ std::string FuncFParam::dump() const {
     bType.dump() +
     ident.dump();
     if (isArray) {
-        for (const auto & constExp : constExps) {
-            res += "[" + constExp.dump() + "]";
+        res += "[]";
+        if (dimension > 1) {
+            for (const auto & constExp : constExps) {
+                res += "[" + constExp.dump() + "]";
+            }
         }
     }
     return res + " }";

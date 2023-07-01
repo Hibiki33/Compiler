@@ -208,11 +208,9 @@ namespace Front {
         explicit FuncFParam() = default;
 
         explicit FuncFParam(const BType &bType,
-                            const Ident &ident);
-
-        explicit FuncFParam(const BType &bType,
                             const Ident &ident,
-                            const std::vector<ConstExp> &constExps);
+                            const std::vector<ConstExp> &constExps,
+                            int dimension);
 
         std::string dump() const override;
 
@@ -220,6 +218,7 @@ namespace Front {
         BType bType;
         Ident ident;
         std::vector<ConstExp> constExps;
+        int dimension{};
         bool isArray{};
 
     };
@@ -238,7 +237,7 @@ namespace Front {
 
     };
 
-// Block
+// Block -> '{' { BlockItem } '}'
     class Block : public BaseASTNode {
     public:
         explicit Block() = default;

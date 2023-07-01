@@ -258,19 +258,95 @@ FuncType Parser::parseFuncType() {
     return FuncType(FuncType::Type::INT);
 }
 
-FuncFParams Parser::parseFuncFParams(){
+// FuncFParams -> FuncFParam { ',' FuncFParam }
+FuncFParams Parser::parseFuncFParams() {
+    std::vector<FuncFParam> funcFParams;
+
+    // one 'FuncFParam' at least
+    funcFParams.push_back(parseFuncFParam());
+    while (getSymbol(0) == "COMMA") {
+        index += 1;
+        funcFParams.push_back(parseFuncFParam());
+    }
+
+    return FuncFParams(funcFParams);
 }
-FuncFParam Parser::parseFuncFParam(){
+
+// FuncFParam -> BType Ident ['[' ']' { '[' ConstExp ']' }]
+FuncFParam Parser::parseFuncFParam() {
+    BType bType;
+    Ident ident;
+    std::vector<ConstExp> constExps;
+    int dimension = 0;
+
+    bType = parseBType();
+    ident = parseIdent();
+
+    if (getSymbol(0) == "LBRACK") {
+        if (getSymbol(1) != "RBRACK") {
+            // TODO: HANDLE ERROR
+        }
+        index += 2;
+        dimension += 1;
+
+        while (getSymbol(0) == "LBRACK") {
+            index += 1;
+            constExps.push_back(parseConstExp());
+            if (getSymbol(0) != "RBRACK") {
+                // TODO: HANDLE ERROR
+            }
+            index += 1;
+            dimension += 1;
+        }
+    }
+
+    return FuncFParam(bType, ident, constExps, dimension);
 }
-Block Parser::parseBlock(){
+
+// Block → '{' { BlockItem } '}'
+Block Parser::parseBlock() {
+    std::vector<BlockItem> blockItems;
+
+    if (getSymbol(0) != "LBRACE") {
+        // TODO:
+    }
+    index += 1;
+
+    while (getSymbol(0) != "RBRACE") {
+        blockItems.push_back(parseBlockItem());
+    }
+    index += 1;
+
+    return Block(blockItems);
 }
-BlockItem Parser::parseBlockItem(){
+
+// BlockItem -> Decl | Stmt
+BlockItem Parser::parseBlockItem() {
+    if (getSymbol(0) == "CONSTTK" || getSymbol(0) == "INTTK") {
+        return BlockItem(parseDecl());
+    }
+    return BlockItem(parseStmt());
 }
-Stmt Parser::parseStmt(){
+
+// Stmt -> LVal '=' Exp ';'
+//      | [Exp] ';'
+//      | Block
+//      | 'if' '(' Cond ')' Stmt [ 'else' Stmt ]
+//      | 'while' '(' Cond ')' Stmt
+//      | 'break' ';' | 'continue' ';'
+//      | 'return' [Exp] ';'
+//      | LVal '=' 'getint''('')'';'
+//      | 'printf''('FormatString{','Exp}')'';'
+Stmt Parser::parseStmt() {
+
 }
-Exp Parser::parseExp(){
+
+Exp Parser::parseExp() {
+
 }
-Cond Parser::parseCond(){
+
+Cond Parser::parseCond() {
+
 }
 LVal Parser::parseLVal(){
 }
